@@ -14,7 +14,7 @@ module.exports = {
     },
     disableHostCheck: false,
     proxy: {
-      "/v1/": {
+      "/v1": {
         target: "http://192.168.1.112:8080",
       },
     },
