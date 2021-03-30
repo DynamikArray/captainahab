@@ -1,33 +1,36 @@
 const { web3 } = require("../util/alchemy");
 
+const walletActions = { BUY: "Buy", SELL: "Sell" };
+
 const uniswapHelper = {
   uniswapRouterAddress: () => {
     return "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
   },
 
-  swapExactETHForTokens: async ({ from, value }, input) => {
-    const tokensAmount = input.inputs[1];
+  swapExactETHForTokens: async ({ category, hash, from, value }, input) => {
     const tokenAddress = `0x${input.inputs[1][1]}`;
-    const { symbol, name } = await web3.alchemy.getTokenMetadata(tokenAddress);
-    return "(BUY) WALLET: " + from + " swapExactETHForTokens " + value + " ETH for " + symbol + " - " + name;
+    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    return { action: walletActions.BUY, from, value, tokenMetaData, category, hash };
   },
 
-  swapETHForExactTokens: async ({ from, value }, input) => {
+  swapETHForExactTokens: async ({ category, hash, from, value }, input) => {
     const tokenAddress = `0x${input.inputs[1][1]}`;
-    const { symbol, name } = await web3.alchemy.getTokenMetadata(tokenAddress);
-    return "(BUY) WALLET: " + from + " swapETHForExactTokens " + value + " ETH for " + symbol + " - " + name;
+    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    return { action: walletActions.BUY, from, value, tokenMetaData, category, hash };
   },
 
-  swapExactTokensForETH: async ({ from, value }, input) => {
-    const tokenAddress = `0x${input.inputs[2][1]}`;
-    const { symbol, name } = await web3.alchemy.getTokenMetadata(tokenAddress);
-    return "(SELL) WALLET: " + from + " swapExactTokensForETH " + value + " ETH for " + symbol + " - " + name;
+  swapExactTokensForETH: async ({ hash, value }, input) => {
+    const from = input.inputs[3];
+    const tokenAddress = `0x${input.inputs[2][0]}`;
+    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    return { action: walletActions.SELL, from, value, hash, tokenMetaData };
   },
 
-  swapTokensForExactETH: async ({ from, value }, input) => {
-    const tokenAddress = `0x${input.inputs[2][1]}`;
-    const { symbol, name } = await web3.alchemy.getTokenMetadata(tokenAddress);
-    return "(SELL) WALLET: " + from + " swapTokensForExactETH " + value + " ETH for " + symbol + " - " + name;
+  swapTokensForExactETH: async ({ to, value }, input) => {
+    const from = input.inputs[3];
+    const tokenAddress = `0x${input.inputs[2][0]}`;
+    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    return { action: walletActions.SELL, from, value, hash, tokenMetaData };
   },
 };
 
