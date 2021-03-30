@@ -1,5 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h2>About</h2>
+    <router-link :to="{ name: 'Home', params: {} }"><h3>Home</h3></router-link>
   </div>
 </template>
