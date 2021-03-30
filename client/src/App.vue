@@ -16,12 +16,10 @@
 import AppBar from "./components/layout/AppBar";
 export default {
   name: "App",
-
   components: { AppBar },
-
-  data: () => ({
-    //
-  }),
+  created() {
+    document.title = "Captain Ahab";
+  },
 };
 </script>
 
