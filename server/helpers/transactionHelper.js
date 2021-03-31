@@ -37,14 +37,13 @@ const transactionHelper = {
       //set for future request
       pageKey = results.pageKey;
 
-      /*
       if (tokenAmount) {
         const filtered = results.transfers.filter((tx) => tx.value > tokenAmount);
         if (filtered.length > 0) txsResults = [...txsResults, ...filtered];
       } else {
         if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
       }
-      */
+
       if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
 
       //handler incrementors
