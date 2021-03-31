@@ -8,8 +8,9 @@
       :items="items"
       sortBy="timestamp"
       :sortDesc="true"
-      :items-per-page="15"
+      :items-per-page="25"
       @update:page="$vuetify.goTo($refs.searchFormDatatable)"
+      :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
     >
       <template v-slot:top="{ pagination, options, updateOptions }">
         <div class="d-flex align-center justify-space-between">
@@ -21,6 +22,7 @@
               :pagination="pagination"
               :options="options"
               @update:options="updateOptions"
+              :items-per-page-options="[10, 25, 50, 100]"
               items-per-page-text="$vuetify.dataTable.itemsPerPageText"
             />
           </div>
@@ -60,7 +62,7 @@
       </template>
 
       <template v-slot:item.hash="{ item }">
-        {{ item.hash }}
+        <a :href="linkToEtherscanTx(item.hash)" target="_blank">{{ truncateTextValue(item.hash) }}</a>
       </template>
 
       <template v-slot:item.from="{ item }">
@@ -72,7 +74,7 @@
 
 <script>
 import { rowHeaders } from "./_headers.js";
-const ETHERSCAN = "https://etherscan.io/";
+const ETHERSCAN = "https://etherscan.io";
 
 export default {
   props: {
