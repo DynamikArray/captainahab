@@ -1,10 +1,12 @@
 <template>
-  <v-card class="grey darken-4">
-    <v-card-text>
+  <v-card class="mb-5">
+    <v-card-text class="my-0 mt-1">
       <v-form ref="txSearchForm" class="d-flex align-center justify-space-between" v-model="validForm">
         <div class="d-flex">
-          <v-text-field dense filled label="ethAmount" v-model="searchFields.ethAmount"></v-text-field>
+          <v-text-field class="mx-3" dense filled label="Amount in Eth" v-model="searchFields.ethAmount"></v-text-field>
+          <v-text-field class="mx-3" dense filled label="Blocks To Search" v-model="searchFields.blocks"></v-text-field>
         </div>
+
         <v-btn color="primary" @click="submitForm()"><v-icon class="mr-2" small>fa fa-search</v-icon>Search</v-btn>
       </v-form>
     </v-card-text>
@@ -19,6 +21,7 @@ export default {
     validForm: false,
     searchFields: {
       ethAmount: 5,
+      blocks: 5,
     },
   }),
   methods: {

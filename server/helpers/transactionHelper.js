@@ -9,7 +9,7 @@ const transactionHelper = {
 
   fetchTxs: async function (toAddress, contractAddresses, numberOfTxsToShow, tokenAmount = false, trim = false) {
     const blockNumber = await web3.eth.getBlockNumber();
-    const fromBlock = web3.utils.numberToHex(blockNumber - 5);
+    const fromBlock = web3.utils.numberToHex(blockNumber - 10);
 
     let txsCount = 0;
     let txsResults = [];

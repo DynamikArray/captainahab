@@ -4,7 +4,7 @@ export const rowHeaders = [
     value: "timestamp",
     sortable: true,
     align: "center",
-    width: "90px",
+    width: "150px",
   },
   {
     text: "Action",
@@ -25,12 +25,17 @@ export const rowHeaders = [
     value: "tokenMetaData",
     sortable: true,
     align: "left",
-    width: "200px",
   },
   {
-    text: "From",
+    text: "TX",
+    value: "hash",
+    sortable: true,
+    align: "center",
+  },
+  {
+    text: "Wallet",
     value: "from",
     sortable: true,
-    align: "right",
+    align: "center",
   },
 ];

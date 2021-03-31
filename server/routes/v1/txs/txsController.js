@@ -11,13 +11,14 @@ const ADDRESS_UNISWAP_ROUTER = uniswapHelper.uniswapRouterAddress();
 
 //main configs send from client
 const TRANASCTIONS_TO_SHOW = 50;
-const TRANSACTION_AMOUNT_THRESHOLD_IN_ETH = 0.5;
 
 async function search(req, res, next) {
   const abi = await abiHelper.getAbiByAddress(ADDRESS_UNISWAP_ROUTER);
   const decoder = new InputDataDecoder(abi);
 
   const ADDRESS_CONTRACT_TO_WATCH = "0x8b0E42F366bA502d787BB134478aDfAE966C8798";
+  const TRANSACTION_AMOUNT_THRESHOLD_IN_ETH = req.query.ethAmount || 5;
+  const TRANASCTIONS_TO_SHOW = req.query.blocks || 5;
 
   const txs = await transactionHelper.fetchTxs(
     ADDRESS_UNISWAP_ROUTER,
@@ -54,7 +55,7 @@ async function search(req, res, next) {
       })
     );
 
-    const filteredResults = formattedResults.filter(Boolean);
+    const filteredResults = formattedResults.filter(Boolean).sort((a, b) => b.timestamp < a.timestamp);
 
     res.send(filteredResults);
   }
