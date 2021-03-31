@@ -2,61 +2,47 @@ import Vue from "vue";
 import Vuex from "vuex";
 Vue.use(Vuex);
 
-import { axiosClient } from "@/util/axios";
+import { MAKE_API_CALL, SEARCH_TXS } from "../actionTypes";
+import { SEARCH_TXS_RESULTS_LOADING, SEARCH_TXS_RESULTS } from "../mutationTypes";
 
-import { MAKE_API_CALL } from "../actionTypes";
-import { ADD_API_CALL, REMOVE_API_CALL } from "../mutationTypes";
-
-//import { USER_LOGOUT } from "@/components/User/store/actionTypes";
-
-const api = {
+const txs = {
   namespaced: true,
   state: {
     loading: false,
+    items: [],
   },
-  getters: {},
-  mutations: {
-    [ADD_API_CALL](state) {
-      state.loading++;
+  getters: {
+    getLoading: (state) => {
+      return state.loading;
     },
-    [REMOVE_API_CALL](state) {
-      state.loading--;
+    getTxs: (state) => {
+      return state.items;
+    },
+  },
+  mutations: {
+    [SEARCH_TXS_RESULTS](state, items) {
+      state.items = items;
+    },
+    [SEARCH_TXS_RESULTS_LOADING](state, { loading }) {
+      state.loading = loading;
     },
   },
   actions: {
-    async [MAKE_API_CALL]({ commit }, payload) {
-      const { headers, method, url, params, loading } = payload;
+    async [SEARCH_TXS]({ dispatch, commit }, params) {
+      const result = await dispatch(
+        `api/${MAKE_API_CALL}`,
+        {
+          method: "get",
+          url: "/txs/search",
+          params: params,
+          loading: `txs/${SEARCH_TXS_RESULTS_LOADING}`,
+        },
+        { root: true }
+      );
 
-      //commit the loading mutation for our indicator
-      if (loading) commit(loading, { loading: true }, { root: true });
-
-      let config = { headers, method, url: `${url}` };
-      //set params for request
-      if (method === "post") config.data = { ...params };
-      if (method === "get") config.params = { ...params };
-      if (method === "put") config.data = { ...params };
-
-      try {
-        commit(`${ADD_API_CALL}`);
-        return await axiosClient({
-          ...axiosClient.defaults,
-          ...config,
-        });
-      } catch (e) {
-        if (e.response.status === 401 || e.response.status === 403) {
-          if (this.$app.$router.history.current.name !== "Login") this.$app.$router.push({ path: "login" });
-          this.$app.$toastr.e("You need to be logged in to continue.");
-        } else {
-          console.log(e);
-          if (e.message) this.$app.$toastr.e(e.message);
-        }
-        return false;
-      } finally {
-        commit(`${REMOVE_API_CALL}`);
-        if (loading) commit(loading, { loading: false }, { root: true });
-      }
+      if (result.data) commit(`${SEARCH_TXS_RESULTS}`, result.data);
     },
   },
 };
 
-export default api;
+export default txs;

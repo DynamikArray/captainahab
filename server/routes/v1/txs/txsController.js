@@ -10,7 +10,7 @@ const uniswapHelper = require("../../../helpers/uniswapHelper");
 const ADDRESS_UNISWAP_ROUTER = uniswapHelper.uniswapRouterAddress();
 
 //main configs send from client
-const TRANASCTIONS_TO_SHOW = 100;
+const TRANASCTIONS_TO_SHOW = 50;
 const TRANSACTION_AMOUNT_THRESHOLD_IN_ETH = 0.5;
 
 async function search(req, res, next) {
@@ -36,23 +36,27 @@ async function search(req, res, next) {
 
         switch (input.method) {
           case "swapExactETHForTokens":
-            return await uniswapHelper.swapExactETHForTokens(tx, input);
+            return await uniswapHelper.BuyOrder(tx, input);
             break;
           case "swapETHForExactTokens":
-            return await uniswapHelper.swapETHForExactTokens(tx, input);
+            return await uniswapHelper.BuyOrder(tx, input);
             break;
           case "swapExactTokensForETH":
-            return await uniswapHelper.swapExactTokensForETH(tx, input);
+            return await uniswapHelper.SellOrder(tx, input);
             break;
           case "swapTokensForExactETH":
-            uniswapHelper.swapTokensForExactETH(tx, input);
+            return await uniswapHelper.SellOrder(tx, input);
             break;
           default:
-            return tx;
+            console.log("COULD NT FIND MATCH FOR TX=>\n", tx.hash, "\n\n");
+            return false;
         }
       })
     );
-    res.send(formattedResults);
+
+    const filteredResults = formattedResults.filter(Boolean);
+
+    res.send(filteredResults);
   }
 }
 

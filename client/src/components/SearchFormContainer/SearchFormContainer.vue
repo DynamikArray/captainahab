@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { SEARCH_TXS } from "@/store/actionTypes";
 export default {
   name: "SearchFormContainer",
   data: () => ({
@@ -22,8 +23,8 @@ export default {
   }),
   methods: {
     submitForm() {
-      const searchParams = {};
-      this.$store.dispatch("SOME_ACTION", searchParams);
+      //validate data maybe before sending
+      this.$store.dispatch(`txs/${SEARCH_TXS}`, this.searchFields);
     },
   },
 };
