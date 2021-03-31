@@ -7,9 +7,16 @@ const transactionHelper = {
     return await web3.alchemy.getAssetTransfers({ ...options, pageKey });
   },
 
-  fetchTxs: async function (toAddress, contractAddresses, numberOfTxsToShow, tokenAmount = false, trim = false) {
+  fetchTxs: async function (
+    toAddress,
+    contractAddresses,
+    numberOfTxsToShow,
+    tokenAmount = false,
+    searchBlocks,
+    trim = false
+  ) {
     const blockNumber = await web3.eth.getBlockNumber();
-    const fromBlock = web3.utils.numberToHex(blockNumber - 10);
+    const fromBlock = web3.utils.numberToHex(blockNumber - searchBlocks);
 
     let txsCount = 0;
     let txsResults = [];
@@ -23,20 +30,22 @@ const transactionHelper = {
           category: ["external", "internal", "token"],
           toAddress: toAddress,
           contractAddresses: contractAddresses,
-          maxCount: numberOfTxsToShow,
+          //maxCount: numberOfTxsToShow,
         },
         pageKey
       );
       //set for future request
       pageKey = results.pageKey;
 
-      //Filter by value of  Token Amount
+      /*
       if (tokenAmount) {
         const filtered = results.transfers.filter((tx) => tx.value > tokenAmount);
         if (filtered.length > 0) txsResults = [...txsResults, ...filtered];
       } else {
         if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
       }
+      */
+      if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
 
       //handler incrementors
       txsCount = txsResults.length;
@@ -44,7 +53,7 @@ const transactionHelper = {
     } while (txsCount < txsLimit);
 
     //trim results to our exact amount and return?
-    if (trim && txsResults.length > numberOfTxsToShow) return txsResults.slice(0, numberOfTxsToShow);
+    //if (trim && txsResults.length > numberOfTxsToShow) return txsResults.slice(0, numberOfTxsToShow);
     //just return results no filter needed
     return txsResults;
   },
