@@ -44,7 +44,7 @@ const transactionHelper = {
         if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
       }
 
-      if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
+      //if (results.transfers.length > 0) txsResults = [...txsResults, ...results.transfers];
 
       //handler incrementors
       txsCount = txsResults.length;
