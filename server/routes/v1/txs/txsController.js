@@ -7,9 +7,11 @@ const Transactions = require("../../../models/Transactions");
 
 async function search(req, res, next) {
   try {
+    const ethAmount = req.query.ethAmount || 5;
     const page = req.query.page || 1;
-    const limit = req.query.limit || 5000;
-    const txs = await Transactions.paginate({}, { page, limit });
+    const limit = req.query.limit || 10;
+
+    const txs = await Transactions.paginate({ value: { $gte: ethAmount } }, { sort: { timestamp: -1 }, page, limit });
     res.send(txs);
   } catch (searchExecption) {
     logger.info("search Exception | error=" + searchExecption.message);

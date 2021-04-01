@@ -10,6 +10,7 @@ const txs = {
   state: {
     loading: false,
     items: [],
+    pager: {},
   },
   getters: {
     getLoading: (state) => {
@@ -20,8 +21,10 @@ const txs = {
     },
   },
   mutations: {
-    [SEARCH_TXS_RESULTS](state, items) {
-      state.items = items;
+    [SEARCH_TXS_RESULTS](state, result) {
+      state.items = result.docs;
+      delete result.docs;
+      state.pager = result;
     },
     [SEARCH_TXS_RESULTS_LOADING](state, { loading }) {
       state.loading = loading;
