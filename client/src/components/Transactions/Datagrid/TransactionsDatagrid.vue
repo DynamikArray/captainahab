@@ -13,25 +13,9 @@
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
       hide-default-footer
     >
-      <template v-slot:top="{}">
-        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
-          <div class="d-flex flex-grow-1">test</div>
-          <div class="d-flex align-center">
-            <ServerSidePager
-              v-if="pager.page > 0"
-              :page="pager.page"
-              :totalPages="pager.totalPages"
-              :totalRecords="pager.totalDocs"
-              :pageLimit="pager.limit"
-              @pageChange="handlePageChange"
-            />
-          </div>
-        </div>
-      </template>
-
       <template v-slot:item.timestamp="{ item }">
         <div class="textShadow">
-          <Timeago name="txTimeAgo" :datetime="new Date(item.timestamp * 1000)" class="caption" />
+          <timeago :key="item.hash" :datetime="new Date(item.timestamp * 1000)" class="caption" />
         </div>
       </template>
 
@@ -61,17 +45,37 @@
       </template>
 
       <template v-slot:item.hash="{ item }">
-        <a :href="linkToEtherscanTx(item.hash)" target="_blank">{{ truncateTextValue(item.hash) }}</a>
+        <a class="underlineNone" :href="linkToEtherscanTx(item.hash)" target="_blank">{{ truncateTextValue(item.hash) }}</a>
       </template>
 
       <template v-slot:item.from="{ item }">
-        <a :href="linkToEtherscanAddress(item.from)" target="_blank">{{ truncateTextValue(item.from) }}</a>
+        <a class="underlineNone" :href="linkToEtherscanAddress(item.from)" target="_blank">{{
+          truncateTextValue(item.from)
+        }}</a>
+      </template>
+
+      <template v-slot:top="{}">
+        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
+          <div class="d-flex align-start justify-start flex-grow-1">
+            <TransactionFilters class="ml-3" />
+          </div>
+          <div class="d-flex align-center caption">
+            <ServerSidePager
+              v-if="pager.page > 0"
+              :page="pager.page"
+              :totalPages="pager.totalPages"
+              :totalRecords="pager.totalDocs"
+              :pageLimit="pager.limit"
+              @pageChange="handlePageChange"
+            />
+          </div>
+        </div>
       </template>
 
       <template v-slot:footer="{}">
         <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
-          <div class="d-flex flex-grow-1"><!--placeholder--></div>
-          <div class="d-flex align-center">
+          <div class="d-flex flex-grow-1"></div>
+          <div class="d-flex align-center caption">
             <ServerSidePager
               v-if="pager.page > 0"
               :page="pager.page"
@@ -90,11 +94,14 @@
 <script>
 import { SEARCH_TXS_RESULTS_GOTO_PAGE } from "@/store/actionTypes";
 import { rowHeaders } from "./_headers.js";
-const ETHERSCAN = "https://etherscan.io";
 
 import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
+import TransactionFilters from "@/components/Transactions/TransactionFilters";
+
+const ETHERSCAN = "https://etherscan.io";
 
 export default {
+  name: "TransactionDataGrid",
   props: {
     loading: {
       type: Boolean,
@@ -111,6 +118,7 @@ export default {
   },
   components: {
     ServerSidePager,
+    TransactionFilters,
   },
   data: () => ({
     rowHeaders,
@@ -138,8 +146,8 @@ export default {
     truncateTextValue(txtValue) {
       const pieces = txtValue.split("");
       const length = pieces.length;
-      const beg = [...pieces].splice(0, 5).join("");
-      const end = [...pieces].splice(length - 5, length).join("");
+      const beg = [...pieces].splice(0, 6).join("");
+      const end = [...pieces].splice(length - 6, length).join("");
       return beg + "...." + end;
     },
     linkToEtherscanAddress(value) {

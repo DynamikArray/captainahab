@@ -7,9 +7,9 @@ const Transactions = require("../../../models/Transactions");
 
 async function search(req, res, next) {
   try {
-    const ethAmount = req.query.ethAmount || 5;
+    const ethAmount = req.query.ethLimit || 5;
     const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
+    const limit = req.query.limit || 25;
 
     const txs = await Transactions.paginate({ value: { $gte: ethAmount } }, { sort: { timestamp: -1 }, page, limit });
     res.send(txs);
