@@ -23,7 +23,11 @@ const uniswapHelper = {
     const { timestamp } = await web3.eth.getBlock(numberBlock);
     return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
   },
-  /*
+};
+
+module.exports = uniswapHelper;
+
+/*
   swapExactETHForTokens: async ({ category, hash, from, value, blockNum }, input) => {
     const tokenAddress = `0x${input.inputs[1][1]}`;
     const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
@@ -58,6 +62,3 @@ const uniswapHelper = {
     return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
   },
   */
-};
-
-module.exports = uniswapHelper;

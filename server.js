@@ -10,6 +10,8 @@ const { logger } = require("./server/util/log");
 
 const { models, connectDb } = require("./server/models/mongoose");
 
+const blockHelper = require("./server/helpers/blockHelper");
+
 const router = require("./server/routes/routes.js");
 app.use(router);
 router.use("/", serveStatic(path.join(__dirname, "/client/dist")));
@@ -22,6 +24,8 @@ connectDb().then(async () => {
 
   const port = process.env.PORT || 8080;
   app.listen(port);
+
+  blockHelper.listenForNewBlocks();
 
   logger.info(`Ahab is running on port: ${port}`);
 });
