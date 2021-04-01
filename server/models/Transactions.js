@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const transactionsSchema = new mongoose.Schema(
   {
@@ -39,6 +40,8 @@ const transactionsSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+transactionsSchema.plugin(mongoosePaginate);
 
 const Transactions = mongoose.model("Transactions", transactionsSchema);
 
