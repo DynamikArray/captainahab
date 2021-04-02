@@ -53,7 +53,6 @@ const txs = {
       state.pager.page = page;
     },
     [SEARCH_TX_RESULTS_FILTER_UPDATE](state, filter) {
-      console.log("FILTER IS", { ...state.filters, ...filter });
       state.filters = { ...state.filters, ...filter };
     },
   },
