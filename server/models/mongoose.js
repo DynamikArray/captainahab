@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const Transactions = require("./Transactions");
+const TokensMetaData = require("./TokensMetaData");
 
 const connectDb = () => {
   return mongoose.connect(process.env.DATABASE_URL, {
@@ -11,6 +12,6 @@ const connectDb = () => {
   });
 };
 
-const models = { Transactions };
+const models = { Transactions, TokensMetaData };
 //export default models;
 module.exports = { models, connectDb };

@@ -1,4 +1,6 @@
+const { logger } = require("../util/log");
 const { web3 } = require("../util/alchemy");
+const { models } = require("../models/mongoose");
 
 const walletActions = { BUY: "Buy", SELL: "Sell" };
 
@@ -9,7 +11,7 @@ const uniswapHelper = {
 
   BuyOrder: async ({ category, hash, from, value, blockNum }, input) => {
     const tokenAddress = `0x${input.inputs[1][1]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
     const numberBlock = web3.utils.hexToNumberString(blockNum);
     const { timestamp } = await web3.eth.getBlock(numberBlock);
     return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp };
@@ -18,47 +20,36 @@ const uniswapHelper = {
   SellOrder: async ({ to, value, hash, blockNum }, input) => {
     const from = input.inputs[3];
     const tokenAddress = `0x${input.inputs[2][0]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+    const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
     const numberBlock = web3.utils.hexToNumberString(blockNum);
     const { timestamp } = await web3.eth.getBlock(numberBlock);
     return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
+  },
+
+  checkTokenMetaData: async (tokenAddress) => {
+    try {
+      const result = await models.TokensMetaData.find({ address: tokenAddress });
+      if (result.length == 0) return await uniswapHelper.getTokenMetaData(tokenAddress);
+      if (result.length == 1) return result[0];
+    } catch (checkTokenMetaDataException) {
+      logger.error("checkTokenMetaDataException | error=" + checkTokenMetaDataException.message);
+    }
+  },
+
+  getTokenMetaData: async (tokenAddress) => {
+    try {
+      const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
+      const newToken = new models.TokensMetaData({ address: tokenAddress, ...tokenMetaData });
+      try {
+        return await newToken.save();
+      } catch (savedTokenException) {
+        logger.error("savedTokenException | error=" + savedTokenException.message);
+        return await uniswapHelper.checkTokenMetaData(tokenAddress);
+      }
+    } catch (getTokenMetaDataExecption) {
+      logger.error("getTokenMetaDataExecption | error=" + getTokenMetaDataExecption.message);
+    }
   },
 };
 
 module.exports = uniswapHelper;
-
-/*
-  swapExactETHForTokens: async ({ category, hash, from, value, blockNum }, input) => {
-    const tokenAddress = `0x${input.inputs[1][1]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp };
-  },
-
-  swapETHForExactTokens: async ({ category, hash, from, value, blockNum }, input) => {
-    const tokenAddress = `0x${input.inputs[1][1]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp };
-  },
-
-  swapExactTokensForETH: async ({ hash, value, blockNum }, input) => {
-    const from = input.inputs[3];
-    const tokenAddress = `0x${input.inputs[2][0]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
-  },
-
-  swapTokensForExactETH: async ({ to, value, hash, blockNum }, input) => {
-    const from = input.inputs[3];
-    const tokenAddress = `0x${input.inputs[2][0]}`;
-    const tokenMetaData = await web3.alchemy.getTokenMetadata(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
-  },
-  */
