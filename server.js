@@ -25,7 +25,10 @@ connectDb().then(async () => {
   const port = process.env.PORT || 8080;
   app.listen(port);
 
-  blockHelper.listenForNewBlocks();
+  if (process.env.NODE_ENV != "development") {
+    logger.info(`Ahab will listen for new blocks!`);
+    blockHelper.listenForNewBlocks();
+  }
 
   logger.info(`Ahab is running on port: ${port}`);
 });
