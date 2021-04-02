@@ -2,16 +2,7 @@
   <div class="d-flex align-start justify-start">
     <v-form ref="transactionSearchForm" v-model="validForm" v-on:submit.prevent>
       <div class="d-flex align-middle justify-center">
-        <div class="d-flex flex-column align-end justify-center mt-3 mr-2">
-          <div class="d-flex align-center">
-            <h4 class="mt-0">Eth Amount</h4>
-          </div>
-          <div class="d-flex align-center">
-            <div class="text-caption">Transaction Value</div>
-          </div>
-        </div>
-
-        <div class="" style="max-width: 100px">
+        <div class="mx-5" style="width: 150px">
           <v-text-field
             autocomplete="off"
             class="mt-3"
@@ -22,8 +13,38 @@
             solo
             outlined
             dense
-            :hide-details="true"
-          />
+          >
+            <template v-slot:prepend class="d-flex align-start flex-grow-1">
+              <div class="d-flex flex-column align-start justify-start mr-2">
+                <div class="d-flex align-center text-center">
+                  <h4 class="mt-0">Eth Amount</h4>
+                </div>
+              </div>
+            </template>
+          </v-text-field>
+        </div>
+
+        <div class="mx-5" style="width: 160px">
+          <v-text-field
+            autocomplete="off"
+            class="mt-3"
+            :value="localSymbol"
+            :rules="fieldRules.sybmol"
+            @input="forceUpperSymbol"
+            name="symbol"
+            label="Symbol"
+            solo
+            outlined
+            dense
+          >
+            <template v-slot:prepend class="d-flex align-start flex-grow-1">
+              <div class="d-flex flex-column align-start justify-start mr-2">
+                <div class="d-flex align-center text-center">
+                  <h4 class="mt-0">Coins Symbol</h4>
+                </div>
+              </div>
+            </template>
+          </v-text-field>
         </div>
 
         <div class="ml-3 mt-3 align-center justify-center">
@@ -43,21 +64,26 @@ import { fieldRules } from "./fieldRules";
 export default {
   name: "TransactionFilters",
   watch: {
-    ethLimit: function (eth) {
-      this.localEthLimit = eth;
+    filters: function (filters) {
+      if (filters.ethLimit) this.localEthLimit = filters.ethLimit;
+      if (filters.symbol) this.localSymbol = filters.symbol;
     },
   },
   data: () => ({
     validForm: false,
     fieldRules,
     localEthLimit: 5,
+    localSymbol: "",
   }),
   computed: {
     ...mapGetters({
-      ethLimit: "txs/getEthLimit",
+      filters: "txs/getFilters",
     }),
   },
   methods: {
+    forceUpperSymbol(val) {
+      this.localSymbol = val.toUpperCase();
+    },
     validateForm() {
       const valid = this.$refs.transactionSearchForm.validate();
       return valid;
@@ -66,7 +92,9 @@ export default {
       if (!this.$refs.transactionSearchForm.validate()) return false;
 
       const ethLimit = this.localEthLimit;
-      this.$store.commit(`txs/${SEARCH_TXS_RESULTS_FILTER_UPDATE}`, { ethLimit }, { root: true });
+      const symbol = this.localSymbol;
+
+      this.$store.commit(`txs/${SEARCH_TXS_RESULTS_FILTER_UPDATE}`, { ethLimit, symbol }, { root: true });
       this.$store.dispatch(`txs/${SEARCH_TXS}`, { root: true });
     },
   },

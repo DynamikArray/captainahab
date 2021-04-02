@@ -41,6 +41,12 @@ const transactionsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+/*
+transactionsSchema.post("insertMany", function (docs, next) {
+  console.log("%s has been saved", docs.length);
+});
+*/
+
 transactionsSchema.plugin(mongoosePaginate);
 
 const Transactions = mongoose.model("Transactions", transactionsSchema);

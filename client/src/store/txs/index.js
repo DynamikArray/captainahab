@@ -20,7 +20,8 @@ const txs = {
       limit: 0,
     },
     filters: {
-      ethLimit: 20,
+      ethLimit: 5,
+      symbol: "",
     },
   },
   getters: {
@@ -35,9 +36,6 @@ const txs = {
     },
     getFilters: (state) => {
       return state.filters;
-    },
-    getEthLimit: (state) => {
-      return state.filters.ethLimit;
     },
   },
   mutations: {
