@@ -9,6 +9,9 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "@alch/alchemy-web3": "^1.0.1",
     "axios": "^0.21.1",

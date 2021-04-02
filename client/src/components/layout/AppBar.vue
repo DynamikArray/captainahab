@@ -1,16 +1,14 @@
 <template>
-  <v-app-bar app color="primary" dark class="">
-    <div class="loadingIndicator">
-      <v-progress-linear :indeterminate="Boolean(loading)" color="white" class=""></v-progress-linear>
+  <v-app-bar app color="primary" dark class="pa-0 ma-0" :maxHeight="35">
+    <div class="d-flex align-center justify-space-between flex-grow-1">
+      <div class="d-flex align-center justify-start">Logo</div>
+      <div class="d-flex align-center justify-start">
+        <v-btn href="https://etherscan.io/" target="_blank" text>
+          <span class="mr-2">Etherscan</span>
+          <v-icon>mdi-open-in-new</v-icon>
+        </v-btn>
+      </div>
     </div>
-    <div class="d-flex align-center">LOGO</div>
-
-    <v-spacer></v-spacer>
-
-    <v-btn href="https://etherscan.io/" target="_blank" text>
-      <span class="mr-2">Etherscan</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
   </v-app-bar>
 </template>
 
@@ -27,4 +25,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.v-app-bar .v-toolbar__content {
+  height: 35px !important;
+}
+</style>

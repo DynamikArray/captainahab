@@ -2,13 +2,13 @@ import Vue from "vue";
 import Vuex from "vuex";
 Vue.use(Vuex);
 
-import { MAKE_API_CALL, SEARCH_TXS, SEARCH_TXS_RESULTS_GOTO_PAGE } from "../actionTypes";
+import { MAKE_API_CALL, SEARCH_TXS, SEARCH_TXS_RESULTS_GOTO_PAGE } from "@/store/actionTypes";
 import {
   SEARCH_TXS_RESULTS_LOADING,
   SEARCH_TXS_RESULTS,
-  SEARCH_TX_RESULTS_PAGINATION_CHANGE,
-  SEARCH_TX_RESULTS_FILTER_UPDATE,
-} from "../mutationTypes";
+  SEARCH_TXS_RESULTS_PAGINATION_CHANGE,
+  SEARCH_TXS_RESULTS_FILTER_UPDATE,
+} from "@/store/mutationTypes";
 
 const txs = {
   namespaced: true,
@@ -49,16 +49,16 @@ const txs = {
     [SEARCH_TXS_RESULTS_LOADING](state, { loading }) {
       state.loading = loading;
     },
-    [SEARCH_TX_RESULTS_PAGINATION_CHANGE](state, page) {
+    [SEARCH_TXS_RESULTS_PAGINATION_CHANGE](state, page) {
       state.pager.page = page;
     },
-    [SEARCH_TX_RESULTS_FILTER_UPDATE](state, filter) {
+    [SEARCH_TXS_RESULTS_FILTER_UPDATE](state, filter) {
       state.filters = { ...state.filters, ...filter };
     },
   },
   actions: {
     async [SEARCH_TXS_RESULTS_GOTO_PAGE]({ dispatch, commit }, page) {
-      commit(`txs/${SEARCH_TX_RESULTS_PAGINATION_CHANGE}`, page, { root: true });
+      commit(`txs/${SEARCH_TXS_RESULTS_PAGINATION_CHANGE}`, page, { root: true });
 
       dispatch(`txs/${SEARCH_TXS}`, {}, { root: true });
     },

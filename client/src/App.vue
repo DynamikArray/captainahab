@@ -1,8 +1,7 @@
 <template>
   <v-app>
     <AppBar />
-
-    <v-main>
+    <v-main style="padding-top: 30px">
       <v-container fluid>
         <transition name="slide-fade" mode="out-in">
           <router-view></router-view>
