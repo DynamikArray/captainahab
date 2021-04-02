@@ -1,21 +1,22 @@
 <template>
   <div class="d-flex flex-grow-1">
-    <SearchFormDatatable :loading="searchLoading" :items="searchResults" />
+    <TransactionsDatagrid :loading="searchLoading" :items="searchResults" :pager="searchPager" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import SearchFormDatatable from "./SearchFormDatatable";
+import TransactionsDatagrid from "@/components/Transactions/Datagrid/TransactionsDatagrid";
 export default {
-  name: "SearchFormResultsContainer",
+  name: "TransactionsContainer",
   components: {
-    SearchFormDatatable,
+    TransactionsDatagrid,
   },
   computed: {
     ...mapGetters({
       searchResults: "txs/getTxs",
       searchLoading: "txs/getLoading",
+      searchPager: "txs/getPager",
     }),
   },
 };

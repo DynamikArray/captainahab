@@ -24,6 +24,10 @@ export default {
 </script>
 
 <style>
+.underlineNone {
+  text-decoration: none;
+}
+
 .slide-fade-enter-active {
   transition: all 0.3s ease;
 }

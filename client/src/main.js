@@ -3,8 +3,14 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+
 import("./plugins/vueToastr");
-import("./plugins/vueTimeAgo");
+
+import VueTimeago from "vue-timeago";
+Vue.use(VueTimeago, {
+  name: "Timeago", // Component name, `Timeago` by default
+  locale: "en", // Default locale
+});
 
 Vue.config.productionTip = false;
 

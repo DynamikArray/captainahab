@@ -1,20 +1,21 @@
 <template>
-  <div class="home">
-    <SearchFormContainer />
-    <SearchFormResultsContainer />
+  <div class="home mb-5">
+    <TransactionsContainer />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import SearchFormContainer from "@/components/SearchFormContainer/SearchFormContainer";
-import SearchFormResultsContainer from "@/components/SearchFormResults/SearchFormResultsContainer";
+import TransactionsContainer from "@/components/Transactions/TransactionsContainer";
+
+import { SEARCH_TXS } from "@/store/actionTypes";
 
 export default {
   name: "Home",
   components: {
-    SearchFormContainer,
-    SearchFormResultsContainer,
+    TransactionsContainer,
+  },
+  created() {
+    this.$store.dispatch(`txs/${SEARCH_TXS}`);
   },
 };
 </script>
