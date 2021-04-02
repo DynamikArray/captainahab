@@ -28,23 +28,27 @@ const blockHelper = {
   //
   //
   loadBlock: async function (blockNumber) {
-    const hexBlock = web3.utils.numberToHex(blockNumber);
+    try {
+      const hexBlock = web3.utils.numberToHex(blockNumber);
 
-    const abi = await abiHelper.getAbiByAddress(ADDRESS_UNISWAP_ROUTER);
-    blockHelper.decoder = new InputDataDecoder(abi);
+      const abi = await abiHelper.getAbiByAddress(ADDRESS_UNISWAP_ROUTER);
+      blockHelper.decoder = new InputDataDecoder(abi);
 
-    const { transfers } = await web3.alchemy.getAssetTransfers({
-      fromBlock: hexBlock,
-      toBlock: hexBlock,
-      category: ["external", "internal", "token"],
-      toAddress: ADDRESS_UNISWAP_ROUTER,
-      contractAddresses: [ADDRESS_UNISWAP_ROUTER],
-    });
+      const { transfers } = await web3.alchemy.getAssetTransfers({
+        fromBlock: hexBlock,
+        toBlock: hexBlock,
+        category: ["external", "internal", "token"],
+        toAddress: ADDRESS_UNISWAP_ROUTER,
+        contractAddresses: [ADDRESS_UNISWAP_ROUTER],
+      });
 
-    const results = await blockHelper.formatBlocks(transfers);
-    const savedResults = await Transactions.insertMany(results);
+      const results = await blockHelper.formatBlocks(transfers);
+      const savedResults = await Transactions.insertMany(results);
 
-    logger.info("Total Results Saved: " + savedResults.length);
+      logger.info("Total Results Saved: " + savedResults.length);
+    } catch (loadBlockException) {
+      logger.error("loadBlockException error=", loadBlockException.message);
+    }
   },
 
   //
