@@ -38,8 +38,13 @@
               :src="item.tokenMetaData.logo"
             ></v-img>
           </div>
-          <div class="d-flex align-center justify-start flex-grow-1">
-            <h4 class="textShadow">{{ item.tokenMetaData.name }}</h4>
+          <div class="d-flex flex-column align-start justify-start flex-grow-1">
+            <div class="d-flex align-start justify-start flex-grow-1">
+              <h3 class="textShadow">{{ item.tokenMetaData.symbol }}</h3>
+            </div>
+            <div class="d-flex align-start justify-start flex-grow-1">
+              <h5 class="textShadow">{{ item.tokenMetaData.name }}</h5>
+            </div>
           </div>
         </div>
       </template>

@@ -2,17 +2,19 @@ import Vue from "vue";
 import Vuex from "vuex";
 Vue.use(Vuex);
 
-import { MAKE_API_CALL, SEARCH_TXS, SEARCH_TXS_RESULTS_GOTO_PAGE } from "@/store/actionTypes";
+import { MAKE_API_CALL, SEARCH_TXS, SEARCH_TXS_RESULTS_GOTO_PAGE, TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
 import {
   SEARCH_TXS_RESULTS_LOADING,
   SEARCH_TXS_RESULTS,
   SEARCH_TXS_RESULTS_PAGINATION_CHANGE,
   SEARCH_TXS_RESULTS_FILTER_UPDATE,
+  TOTAL_TXS_COUNT_RESULTS,
 } from "@/store/mutationTypes";
 
 const txs = {
   namespaced: true,
   state: {
+    txsCount: 0,
     loading: false,
     items: [],
     pager: {
@@ -37,6 +39,9 @@ const txs = {
     getFilters: (state) => {
       return state.filters;
     },
+    getTxsCount: (state) => {
+      return state.txsCount;
+    },
   },
   mutations: {
     [SEARCH_TXS_RESULTS](state, result) {
@@ -52,6 +57,9 @@ const txs = {
     },
     [SEARCH_TXS_RESULTS_FILTER_UPDATE](state, filter) {
       state.filters = { ...state.filters, ...filter };
+    },
+    [TOTAL_TXS_COUNT_RESULTS](state, { txsCount }) {
+      state.txsCount = txsCount;
     },
   },
   actions: {
@@ -78,6 +86,19 @@ const txs = {
       );
 
       if (result.data) commit(`${SEARCH_TXS_RESULTS}`, result.data);
+    },
+    async [TOTAL_TXS_GET_COUNT]({ dispatch, commit }) {
+      const result = await dispatch(
+        `api/${MAKE_API_CALL}`,
+        {
+          method: "get",
+          url: "/txs/txsCount",
+          loading: `txs/${SEARCH_TXS_RESULTS_LOADING}`,
+        },
+        { root: true }
+      );
+
+      if (result.data) commit(`${TOTAL_TXS_COUNT_RESULTS}`, result.data);
     },
   },
 };

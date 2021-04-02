@@ -26,4 +26,13 @@ async function search(req, res, next) {
   }
 }
 
-module.exports = { search };
+async function txsCount(req, res, next) {
+  try {
+    const txsCount = await Transactions.count({});
+    res.send({ txsCount });
+  } catch (txsCountExecption) {
+    logger.info("txCount Exception | error=" + txsCountExecption.message);
+  }
+}
+
+module.exports = { search, txsCount };

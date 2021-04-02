@@ -12,12 +12,14 @@
 </template>
 
 <script>
+import { TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
 import AppBar from "./components/layout/AppBar";
 export default {
   name: "App",
   components: { AppBar },
   created() {
     document.title = "Captain Ahab";
+    this.$store.dispatch(`txs/${TOTAL_TXS_GET_COUNT}`, { root: true });
   },
 };
 </script>
