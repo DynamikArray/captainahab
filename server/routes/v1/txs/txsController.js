@@ -5,6 +5,8 @@ const { logger } = require("../../../util/log");
 const { web3 } = require("../../../util/alchemy");
 const Transactions = require("../../../models/Transactions");
 
+const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
+
 async function search(req, res, next) {
   try {
     const ethAmount = req.query.ethLimit || 5;
@@ -20,7 +22,24 @@ async function search(req, res, next) {
       },
       { sort: { timestamp: -1 }, page, limit }
     );
-    res.send(txs);
+
+    const symbols = [
+      ...new Set(
+        txs.docs.reduce((acc, tx) => {
+          acc.push(tx.tokenMetaData.symbol);
+          return acc;
+        }, [])
+      ),
+    ];
+
+    try {
+      const prices = await tokenPricesHelper.lookupTokenPrices(symbols);
+      if (prices) txs.docs = tokenPricesHelper.joinPricesWithTxs(prices, txs.docs);
+    } catch (e) {
+      logger.error("TxsController | lookupTokenPrices | error=" + e.message);
+    } finally {
+      res.send(txs);
+    }
   } catch (searchExecption) {
     logger.info("search Exception | error=" + searchExecption.message);
   }
@@ -28,7 +47,7 @@ async function search(req, res, next) {
 
 async function txsCount(req, res, next) {
   try {
-    const txsCount = await Transactions.count({});
+    const txsCount = await Transactions.countDocuments({});
     res.send({ txsCount });
   } catch (txsCountExecption) {
     logger.info("txCount Exception | error=" + txsCountExecption.message);
