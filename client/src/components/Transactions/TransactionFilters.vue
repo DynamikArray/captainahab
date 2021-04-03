@@ -24,7 +24,7 @@
           </v-text-field>
         </div>
 
-        <div class="mx-5" style="width: 160px">
+        <div class="mx-5" style="width: 200px">
           <v-text-field
             autocomplete="off"
             class="mt-3"
@@ -36,6 +36,7 @@
             solo
             outlined
             dense
+            clearable
           >
             <template v-slot:prepend class="d-flex align-start flex-grow-1">
               <div class="d-flex flex-column align-start justify-start mr-2">
@@ -82,7 +83,7 @@ export default {
   },
   methods: {
     forceUpperSymbol(val) {
-      this.localSymbol = val.toUpperCase();
+      if (val) this.localSymbol = val.toUpperCase();
     },
     validateForm() {
       const valid = this.$refs.transactionSearchForm.validate();

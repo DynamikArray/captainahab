@@ -34,7 +34,7 @@ connectDb().then(async () => {
     blockHelper.listenForNewBlocks();
   }
 
-  if (process.env.RUN_PRICES_JOB === true) {
+  if (process.env.RUN_PRICES_JOB == true) {
     const scheduleInterval = 2;
     logger.info(`Ahab will fetch prices every ${scheduleInterval} Minutes `);
     const pricesJob = schedule.scheduleJob(`*/${scheduleInterval} * * * * `, () => {
