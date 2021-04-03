@@ -26,6 +26,7 @@ connectDb().then(async () => {
   app.listen(port);
 
   if (process.env.NODE_ENV != "development") {
+    require("newrelic");
     logger.info(`Ahab will listen for new blocks!`);
     blockHelper.listenForNewBlocks();
   }

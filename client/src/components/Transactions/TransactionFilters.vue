@@ -2,7 +2,7 @@
   <div class="d-flex align-start justify-start">
     <v-form ref="transactionSearchForm" v-model="validForm" v-on:submit.prevent>
       <div class="d-flex align-middle justify-center">
-        <div class="mx-5" style="width: 150px">
+        <div class="mx-5" style="width: 220px">
           <v-text-field
             autocomplete="off"
             class="mt-3"
