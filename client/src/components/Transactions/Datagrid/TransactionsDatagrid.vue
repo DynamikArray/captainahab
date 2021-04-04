@@ -48,13 +48,15 @@
       </template>
 
       <template v-slot:item.hash="{ item }">
-        <a class="underlineNone" :href="linkToEtherscanTx(item.hash)" target="_blank">{{ truncateTextValue(item.hash) }}</a>
+        <v-btn color="success" :href="linkToEtherscanTx(item.hash)" target="_blank" style="min-width: 32px"
+          ><v-icon>fab fa-ethereum</v-icon></v-btn
+        >
       </template>
 
       <template v-slot:item.from="{ item }">
-        <a class="underlineNone" :href="linkToEtherscanAddress(item.from)" target="_blank">{{
-          truncateTextValue(item.from)
-        }}</a>
+        <v-btn color="primary" :href="linkToEtherscanAddress(item.from)" target="_blank" style="min-width: 32px"
+          ><v-icon>fas fa-wallet</v-icon></v-btn
+        >
       </template>
 
       <template v-slot:top="{}">
