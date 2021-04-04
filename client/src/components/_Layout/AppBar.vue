@@ -22,7 +22,7 @@
           <v-btn small text :to="{ name: 'Home' }">Home</v-btn>
         </div>
         <div class="d-flex align-center mx-3">
-          <v-btn small text :to="{ name: 'Trending' }">Trending Coins</v-btn>
+          <v-btn small text :to="{ name: 'Trending' }">Trending</v-btn>
         </div>
       </div>
 

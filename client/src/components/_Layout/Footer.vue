@@ -8,7 +8,7 @@
             <v-icon small color="green">fa fa-check-circle</v-icon>
           </div>
           <div v-else class="d-flex">
-            <v-icon small cololr="red">fas fa-exclamation-circle</v-icon>
+            <v-icon small color="red">fas fa-exclamation-circle</v-icon>
           </div>
         </div>
         <div class="d-flex mx-4">
@@ -20,6 +20,10 @@
               </div>
             </v-slide-y-reverse-transition>
           </div>
+        </div>
+
+        <div class="d-flex ml-auto">
+          <h5>* This is not financial advice *</h5>
         </div>
       </div>
     </div>
