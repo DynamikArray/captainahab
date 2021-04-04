@@ -27,6 +27,11 @@ async function trending(req, res, next) {
           },
         },
       },
+      {
+        $sort: {
+          symbolCount: -1,
+        },
+      },
       { $limit: 50 },
       {
         $lookup: {
@@ -46,11 +51,6 @@ async function trending(req, res, next) {
         },
       },
       { $unwind: "$tokenPricesData" },
-      {
-        $sort: {
-          symbolCount: -1,
-        },
-      },
     ]);
     res.send(trendingCoins);
   } catch (trendingException) {
