@@ -12,6 +12,14 @@
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
       hide-default-footer
     >
+      <template v-slot:item.symbolCount="{ item }">
+        <h2 class="white--text">{{ item.symbolCount }}</h2>
+      </template>
+
+      <template v-slot:item.tokenMetaData="{ item }">
+        <TokenNameAndSymbol :item="item" />
+      </template>
+
       <template v-slot:item.tokenPricesData.price="{ item }">
         <TokenPrice :item="item" />
       </template>
@@ -34,9 +42,10 @@
 <script>
 import { rowHeaders } from "./_headers";
 
-import MarketCap from "@/components/Transactions/Datagrid/fieldTemplates/MarketCap";
-import TokenPrice from "@/components/Transactions/Datagrid/fieldTemplates/TokenPrice";
-import PeriodPriceData from "@/components/Transactions/Datagrid/fieldTemplates/PeriodPriceData";
+import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
+import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
+import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
+import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
 
 export default {
   name: "TrendingDatagrid",
@@ -51,6 +60,7 @@ export default {
     },
   },
   components: {
+    TokenNameAndSymbol,
     MarketCap,
     TokenPrice,
     PeriodPriceData,

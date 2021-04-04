@@ -6,10 +6,10 @@ export const rowHeaders = [
     align: "center",
   },
   {
-    text: "Coin Symbol",
-    value: "_id",
+    text: "Token",
+    value: "tokenMetaData",
     sortable: true,
-    align: "center",
+    align: "right",
   },
   {
     text: "Current Price",
