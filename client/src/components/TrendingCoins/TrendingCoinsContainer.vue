@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="">
     <div class="d-flex"><h2 class="my-0">Trending</h2></div>
+
     <v-divider class="my-1" />
-    <div class="d-flex">
-      <div class="d-flex flex-column">
-        <div class="d-flex">Filter Goes HEre</div>
-        <div class="d-flex"><TrendingDatagrid :items="trendingResults" :loading="trendingLoading" /></div>
+
+    <div class="d-flex flex-column align-center justify-start flex-grow-1">
+      <div class="d-flex flex-grow-1">
+        <TrendingDatagrid class="my-5" :items="trendingResults" :loading="trendingLoading" />
       </div>
     </div>
   </div>

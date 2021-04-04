@@ -70,6 +70,23 @@ const tokenPricesHelper = {
       return returnTxs;
     }
   },
+
+  joinPricesWithTrendingCoins: function (prices, trendingCoins) {
+    let returnTrendingCoins = trendingCoins;
+    try {
+      const fullTrending = returnTrendingCoins.reduce((acc, coin) => {
+        const tokenPrices = prices.filter((price) => price.symbol == coin._id);
+        const newItem = { ...coin, tokenPricesData: tokenPrices[0] };
+        acc.push(newItem);
+        return acc;
+      }, []);
+      returnTrendingCoins = fullTrending;
+    } catch (e) {
+      logger.error("joinPricesWithTrendingCoins | error=" + e.message);
+    } finally {
+      return returnTrendingCoins;
+    }
+  },
 };
 
 module.exports = tokenPricesHelper;
