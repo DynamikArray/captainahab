@@ -5,7 +5,7 @@
     </div>
 
     <div class="d-flex align-center justify-space-between flex-grow-1 mt-1">
-      <div class="d-flex align-center justify-start">
+      <div class="d-flex align-center justify-start mr-5">
         <div class="d-flex align-center justify-middle">
           <v-img src="@/assets/logo_large.png" max-width="60" />
         </div>
@@ -16,6 +16,16 @@
           <h4 class="textShadow">Wallet Hunter</h4>
         </div>
       </div>
+
+      <div class="d-flex align-center ml-3 mr-auto">
+        <div class="d-flex align-center mx-3">
+          <v-btn small text :to="{ name: 'Home' }">Home</v-btn>
+        </div>
+        <div class="d-flex align-center mx-3">
+          <v-btn small text :to="{ name: 'Trending' }">Trending Coins</v-btn>
+        </div>
+      </div>
+
       <div class="d-flex align-center">
         <!--SPACEHOLDER-->
       </div>
