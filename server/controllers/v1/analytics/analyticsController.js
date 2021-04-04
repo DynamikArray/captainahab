@@ -12,11 +12,16 @@ const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
 //
 async function trending(req, res, next) {
   try {
-    const hourAgo = (sub(Date.now(), { hours: 24 }).getTime() / 1000).toFixed(0);
+    const hoursAgo = (sub(Date.now(), { hours: 24 }).getTime() / 1000).toFixed(0);
+
     let trendingCoins = await Transactions.aggregate([
       {
         $match: {
-          timestamp: { $gte: hourAgo },
+          timestamp: { $gte: hoursAgo },
+          "tokenMetaData.symbol": {
+            $exists: true,
+            $ne: null,
+          },
         },
       },
       {
