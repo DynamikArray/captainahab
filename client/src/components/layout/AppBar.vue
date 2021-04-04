@@ -1,6 +1,10 @@
 <template>
-  <v-app-bar app color="primary" dark class="pa-0 ma-0" :maxHeight="45">
-    <div class="d-flex align-center justify-space-between flex-grow-1">
+  <v-app-bar app color="primary" dark class="pa-0 ma-0" :maxHeight="50">
+    <div class="loadingIndicator">
+      <v-progress-linear :indeterminate="Boolean(loading)" color="white" height="5"></v-progress-linear>
+    </div>
+
+    <div class="d-flex align-center justify-space-between flex-grow-1 mt-1">
       <div class="d-flex align-center justify-start">
         <div class="d-flex align-center justify-middle">
           <v-img src="@/assets/logo_large.png" max-width="60" />
@@ -13,24 +17,20 @@
         </div>
       </div>
       <div class="d-flex align-center">
-        <h5 class="mr-2">Transactions Indexed:</h5>
-        <h4>{{ txsCount.toLocaleString() }}</h4>
+        <!--SPACEHOLDER-->
       </div>
     </div>
   </v-app-bar>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
-  name: "cs-AppBar",
+  name: "ahab-AppBar",
   computed: {
     ...mapState({
       loading: (state) => state.api.loading,
-    }),
-    ...mapGetters({
-      txsCount: "txs/getTxsCount",
     }),
   },
 };
@@ -38,6 +38,13 @@ export default {
 
 <style>
 .v-app-bar .v-toolbar__content {
-  height: 45px !important;
+  height: 50px !important;
+}
+
+.loadingIndicator {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
 }
 </style>

@@ -63,6 +63,9 @@ const txs = {
     },
   },
   actions: {
+    socket_txscount({ commit }, txsCount) {
+      commit(`txs/${TOTAL_TXS_COUNT_RESULTS}`, { txsCount }, { root: true });
+    },
     async [SEARCH_TXS_RESULTS_GOTO_PAGE]({ dispatch, commit }, page) {
       commit(`txs/${SEARCH_TXS_RESULTS_PAGINATION_CHANGE}`, page, { root: true });
 

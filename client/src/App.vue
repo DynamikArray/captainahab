@@ -8,6 +8,7 @@
         </transition>
       </v-container>
     </v-main>
+    <Footer />
   </v-app>
 </template>
 
@@ -15,9 +16,11 @@
 import { TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
 
 import AppBar from "./components/layout/AppBar";
+import Footer from "./components/layout/Footer";
+
 export default {
   name: "App",
-  components: { AppBar },
+  components: { AppBar, Footer },
   created() {
     document.title = "Captain Ahab";
     this.$store.dispatch(`txs/${TOTAL_TXS_GET_COUNT}`, { root: true });

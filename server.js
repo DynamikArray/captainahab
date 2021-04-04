@@ -30,10 +30,13 @@ connectDb().then(async () => {
   const port = process.env.PORT || 8080;
   server.listen(port);
 
+  const events = require("events");
+  const em = new events.EventEmitter();
+
   if (process.env.NODE_ENV != "development") {
     require("newrelic");
     logger.info(`Ahab will listen for new blocks!`);
-    blockHelper.listenForNewBlocks();
+    await blockHelper.listenForNewBlocks(em);
   }
 
   if (process.env.RUN_PRICES_JOB == true) {
@@ -44,7 +47,7 @@ connectDb().then(async () => {
     });
   }
 
-  require("./server/socketRoutes")(io);
+  require("./server/socketRoutes")(io, em);
 
   logger.info(`Ahab API is running on port: ${port}`);
 });

@@ -8,11 +8,31 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     socketStatus: false,
+    socketStatusMessage: false,
   },
-  mutations: {},
+  getters: {
+    getSocketStatus: (state) => {
+      return state.socketStatus;
+    },
+    getSocketStatusMessage: (state) => {
+      return state.socketStatusMessage;
+    },
+  },
+  mutations: {
+    SOCKET_STATUS(state, val) {
+      state.socketStatus = val;
+    },
+    SOCKET_STATUS_MESSAGE(state, val) {
+      state.socketStatusMessage = val;
+    },
+  },
   actions: {
-    socket_connect() {
-      console.log("Conencted");
+    socket_connect({ commit }) {
+      commit("SOCKET_STATUS", true);
+    },
+    socket_disconnect({ commit }, reason) {
+      commit("SOCKET_STATUS", false);
+      commit("SOCKET_STATUS_MESSAGE", reason);
     },
   },
   modules: {

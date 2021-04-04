@@ -15,11 +15,13 @@ const blockHelper = {
   //
   //
   //
-  listenForNewBlocks: function () {
-    web3.eth.subscribe("newBlockHeaders", (err, result) => {
+  listenForNewBlocks: async function (em) {
+    web3.eth.subscribe("newBlockHeaders", async (err, result) => {
       if (!err) {
         logger.info("New Block Headers | block=" + result.number);
-        blockHelper.loadBlock(result.number);
+        await blockHelper.loadBlock(result.number);
+        const txsCount = await Transactions.countDocuments({});
+        em.emit("NewBlocksLoaded", txsCount);
       }
     });
   },
