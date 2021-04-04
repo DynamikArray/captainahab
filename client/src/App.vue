@@ -13,6 +13,7 @@
 
 <script>
 import { TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
+
 import AppBar from "./components/layout/AppBar";
 export default {
   name: "App",

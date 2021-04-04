@@ -1,13 +1,14 @@
 require("dotenv").config();
 const path = require("path");
 const schedule = require("node-schedule");
-
-const express = require("express");
 const serveStatic = require("serve-static");
 const morgan = require("morgan");
 
-const app = express();
+const app = require("express")();
 app.use(morgan("tiny"));
+
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, { serveClient: false });
 
 const { logger } = require("./server/util/log");
 const { models, connectDb } = require("./server/models/mongoose");
@@ -22,11 +23,12 @@ router.get(/.*/, function (req, res) {
   res.sendFile(path.join(__dirname, "/client/dist/index.html"));
 });
 
+//Once connect launch our server
 connectDb().then(async () => {
   logger.info("Ahab Connected to Mongo");
 
   const port = process.env.PORT || 8080;
-  app.listen(port);
+  server.listen(port);
 
   if (process.env.NODE_ENV != "development") {
     require("newrelic");
@@ -42,5 +44,7 @@ connectDb().then(async () => {
     });
   }
 
-  logger.info(`Ahab is running on port: ${port}`);
+  require("./server/socketRoutes")(io);
+
+  logger.info(`Ahab API is running on port: ${port}`);
 });

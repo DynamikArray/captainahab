@@ -6,9 +6,15 @@ import txs from "./txs";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
-  state: {},
+  state: {
+    socketStatus: false,
+  },
   mutations: {},
-  actions: {},
+  actions: {
+    socket_connect() {
+      console.log("Conencted");
+    },
+  },
   modules: {
     api,
     txs,
