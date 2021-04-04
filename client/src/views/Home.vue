@@ -1,5 +1,5 @@
 <template>
-  <div class="home mb-5">
+  <div class="home">
     <TransactionsContainer />
   </div>
 </template>
@@ -10,7 +10,7 @@ import TransactionsContainer from "@/components/Transactions/TransactionsContain
 import { SEARCH_TXS } from "@/store/actionTypes";
 
 export default {
-  name: "Home",
+  name: "HomeView",
   components: {
     TransactionsContainer,
   },

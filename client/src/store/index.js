@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import api from "./api";
 import txs from "./txs";
+import trending from "./trending";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
@@ -38,5 +39,6 @@ export default new Vuex.Store({
   modules: {
     api,
     txs,
+    trending,
   },
 });

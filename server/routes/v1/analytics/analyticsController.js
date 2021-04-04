@@ -7,10 +7,13 @@ const { logger } = require("../../../util/log");
 const { sub } = require("date-fns");
 
 const Transactions = require("../../../models/Transactions");
+const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
+
+//
 async function trending(req, res, next) {
   try {
     const hourAgo = (sub(Date.now(), { hours: 24 }).getTime() / 1000).toFixed(0);
-    const trendingCoins = await Transactions.aggregate([
+    let trendingCoins = await Transactions.aggregate([
       {
         $match: {
           timestamp: { $gte: hourAgo },
@@ -24,12 +27,30 @@ async function trending(req, res, next) {
           },
         },
       },
+      { $limit: 50 },
+      {
+        $lookup: {
+          from: "tokensmetadatas",
+          localField: "_id",
+          foreignField: "symbol",
+          as: "tokenMetaData",
+        },
+      },
+      { $unwind: "$tokenMetaData" },
+      {
+        $lookup: {
+          from: "tokenspricedatas",
+          localField: "_id",
+          foreignField: "symbol",
+          as: "tokenPricesData",
+        },
+      },
+      { $unwind: "$tokenPricesData" },
       {
         $sort: {
           symbolCount: -1,
         },
       },
-      { $limit: 50 },
     ]);
     res.send(trendingCoins);
   } catch (trendingException) {

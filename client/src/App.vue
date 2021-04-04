@@ -15,8 +15,8 @@
 <script>
 import { TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
 
-import AppBar from "./components/layout/AppBar";
-import Footer from "./components/layout/Footer";
+import AppBar from "./components/_Layout/AppBar";
+import Footer from "./components/_Layout/Footer";
 
 export default {
   name: "App",

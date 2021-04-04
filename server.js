@@ -3,6 +3,7 @@ const path = require("path");
 const schedule = require("node-schedule");
 const serveStatic = require("serve-static");
 const morgan = require("morgan");
+const history = require("connect-history-api-fallback");
 
 const app = require("express")();
 app.use(morgan("tiny"));
@@ -18,6 +19,12 @@ const tokenPricesHelper = require("./server/helpers/tokenPricesHelper");
 const router = require("./server/routes/routes.js");
 
 app.use(router);
+app.use(
+  history({
+    verbose: true,
+    index: "/client/dist/index.html",
+  })
+);
 router.use("/", serveStatic(path.join(__dirname, "/client/dist")));
 router.get(/.*/, function (req, res) {
   res.sendFile(path.join(__dirname, "/client/dist/index.html"));

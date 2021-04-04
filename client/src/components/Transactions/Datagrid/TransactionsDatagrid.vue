@@ -103,10 +103,10 @@ import { rowHeaders } from "./_headers.js";
 import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 import TransactionFilters from "@/components/Transactions/TransactionFilters";
 
-import MarketCap from "./fieldTemplates/MarketCap";
-import TokenNameAndSymbol from "./fieldTemplates/TokenNameAndSymbol";
-import TokenPrice from "./fieldTemplates/TokenPrice";
-import PeriodPriceData from "./fieldTemplates/PeriodPriceData";
+import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
+import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
+import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
+import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
 
 const ETHERSCAN = "https://etherscan.io";
 
