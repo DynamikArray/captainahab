@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-grow-1">
+  <div class="d-flex flex-grow-1 my-5">
     <v-data-table
       ref="dataTable"
       :page.sync="pagination.page"

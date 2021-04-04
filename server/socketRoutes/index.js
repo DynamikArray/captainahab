@@ -4,10 +4,6 @@ module.exports = (io, em) => {
   io.on("connection", function (socket) {
     logger.info("Socket Connection established | socketId=" + socket.id);
 
-    em.on("NewBlocksLoaded", function (txCount) {
-      socket.emit("txscount", txCount);
-    });
-
-    require("./txsCount")(socket);
+    require("./txsCount")(socket, em);
   });
 };
