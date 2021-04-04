@@ -15,7 +15,7 @@
     >
       <template v-slot:item.timestamp="{ item }">
         <div class="textShadow">
-          <timeago :key="item.hash" :datetime="new Date(item.timestamp * 1000)" class="caption" />
+          <Timeago :key="item.hash" :datetime="new Date(item.timestamp * 1000)" class="text-subtitle-2" />
         </div>
       </template>
 
@@ -28,25 +28,23 @@
       </template>
 
       <template v-slot:item.tokenMetaData="{ item }">
-        <div class="d-flex align-center justify-start flex-grow-1">
-          <div class="d-flex align-center justify-start">
-            <v-img
-              class="ma-3 white darken-1"
-              style="border-radius: 15px"
-              max-height="30"
-              max-width="30"
-              :src="item.tokenMetaData.logo"
-            ></v-img>
-          </div>
-          <div class="d-flex flex-column align-start justify-start flex-grow-1">
-            <div class="d-flex align-start justify-start flex-grow-1">
-              <h3 class="textShadow">{{ item.tokenMetaData.symbol }}</h3>
-            </div>
-            <div class="d-flex align-start justify-start flex-grow-1">
-              <h5 class="textShadow">{{ item.tokenMetaData.name }}</h5>
-            </div>
-          </div>
-        </div>
+        <TokenNameAndSymbol :item="item" />
+      </template>
+
+      <template v-slot:item.tokenPricesData.price="{ item }">
+        <TokenPrice :item="item" />
+      </template>
+
+      <template v-slot:item.tokenPricesData.market_cap="{ item }">
+        <MarketCap :item="item" />
+      </template>
+
+      <template v-slot:item.tokenPricesData.1d="{ item }">
+        <PeriodPriceData :item="item" dayPeriod="1d" />
+      </template>
+
+      <template v-slot:item.tokenPricesData.7d="{ item }">
+        <PeriodPriceData :item="item" dayPeriod="7d" />
       </template>
 
       <template v-slot:item.hash="{ item }">
@@ -103,6 +101,11 @@ import { rowHeaders } from "./_headers.js";
 import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 import TransactionFilters from "@/components/Transactions/TransactionFilters";
 
+import MarketCap from "./fieldTemplates/MarketCap";
+import TokenNameAndSymbol from "./fieldTemplates/TokenNameAndSymbol";
+import TokenPrice from "./fieldTemplates/TokenPrice";
+import PeriodPriceData from "./fieldTemplates/PeriodPriceData";
+
 const ETHERSCAN = "https://etherscan.io";
 
 export default {
@@ -124,6 +127,10 @@ export default {
   components: {
     ServerSidePager,
     TransactionFilters,
+    TokenNameAndSymbol,
+    TokenPrice,
+    MarketCap,
+    PeriodPriceData,
   },
   data: () => ({
     rowHeaders,

@@ -4,7 +4,7 @@ export const rowHeaders = [
     value: "timestamp",
     sortable: true,
     align: "center",
-    width: "150px",
+    width: "100px",
   },
   {
     text: "Action",
@@ -24,7 +24,31 @@ export const rowHeaders = [
     text: "Token",
     value: "tokenMetaData",
     sortable: true,
+    align: "right",
+  },
+  {
+    text: "Current Price",
+    value: "tokenPricesData.price",
+    sortable: true,
     align: "left",
+  },
+  {
+    text: "Market Cap",
+    value: "tokenPricesData.market_cap",
+    sortable: true,
+    align: "left",
+  },
+  {
+    text: "1d Price Action",
+    value: "tokenPricesData.1d",
+    sortable: true,
+    align: "center",
+  },
+  {
+    text: "7d Price Action",
+    value: "tokenPricesData.7d",
+    sortable: true,
+    align: "center",
   },
   {
     text: "TX",

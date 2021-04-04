@@ -3,8 +3,39 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-
 import("./plugins/vueToastr");
+
+import VueCurrencyFilter from "vue-currency-filter";
+Vue.use(VueCurrencyFilter, [
+  {
+    name: "currency",
+    symbol: "$",
+    thousandsSeparator: ",",
+    fractionCount: 2,
+    fractionSeparator: ".",
+    avoidEmptyDecimals: "",
+  },
+  {
+    // default name 'currency_2'
+    name: "below_one_dollar",
+    symbol: "$",
+    thousandsSeparator: "",
+    fractionCount: 4,
+    fractionSeparator: ".",
+    symbolPosition: "front",
+    symbolSpacing: false,
+  },
+  {
+    // default name 'currency_2'
+    name: "volume",
+    symbol: "$",
+    thousandsSeparator: ",",
+    fractionCount: 0,
+    fractionSeparator: ".",
+    symbolPosition: "front",
+    symbolSpacing: true,
+  },
+]);
 
 import VueTimeago from "vue-timeago";
 Vue.use(VueTimeago, {
