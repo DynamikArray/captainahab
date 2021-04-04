@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     formatChangeColor(val) {
-      if (val.split("")[0] === "-") {
+      if (val && val.split("")[0] === "-") {
         return "red--text";
       }
       return "green--text";
