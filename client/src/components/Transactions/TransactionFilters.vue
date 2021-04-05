@@ -56,7 +56,6 @@
                 autocomplete="off"
                 class="mt-3"
                 :value="localSymbol"
-                :rules="fieldRules.sybmol"
                 @input="forceUpperSymbol"
                 name="symbol"
                 label="Symbol"
@@ -91,7 +90,6 @@
 import { mapGetters } from "vuex";
 import { SEARCH_TXS } from "@/store/actionTypes";
 import { SEARCH_TXS_RESULTS_FILTER_UPDATE } from "@/store/mutationTypes";
-import { fieldRules } from "./fieldRules";
 
 export default {
   name: "TransactionFilters",
@@ -104,7 +102,6 @@ export default {
   },
   data: () => ({
     validForm: false,
-    fieldRules,
     localMinEth: "",
     localMaxEth: "",
     localSymbol: "",
