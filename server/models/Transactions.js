@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const transactionsSchema = new mongoose.Schema(
   {
@@ -24,6 +25,9 @@ const transactionsSchema = new mongoose.Schema(
       type: String,
     },
     tokenMetaData: {
+      address: {
+        type: String,
+      },
       decimals: {
         type: Number,
       },
@@ -47,6 +51,7 @@ transactionsSchema.post("insertMany", function (docs, next) {
 });
 */
 
+transactionsSchema.plugin(aggregatePaginate);
 transactionsSchema.plugin(mongoosePaginate);
 
 const Transactions = mongoose.model("Transactions", transactionsSchema);

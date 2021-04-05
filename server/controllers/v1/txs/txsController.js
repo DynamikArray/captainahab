@@ -9,12 +9,34 @@ const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
 
 async function search(req, res, next) {
   try {
-    const ethAmount = req.query.ethLimit || 5;
+    const ethAmount = req.query.ethLimit || 1;
     const symbol = req.query.symbol || "";
 
     const page = req.query.page || 1;
     const limit = req.query.limit || 25;
 
+    let matchCriteria = {
+      value: { $gte: ethAmount },
+      "tokenMetaData.symbol": { $regex: "" },
+    };
+    //,
+    //"
+    try {
+      const txs = await Transactions.aggregatePaginate(
+        Transactions.aggregate([
+          {
+            $match: matchCriteria,
+          },
+        ]),
+        { sort: { timestamp: -1 }, page, limit }
+      );
+      console.log(txs);
+      res.send(txs);
+    } catch (searchExecption) {
+      logger.error("searchExecption | error=" + searchExecption.message);
+    }
+
+    /*
     const txs = await Transactions.paginate(
       {
         value: { $gte: ethAmount },
@@ -40,6 +62,7 @@ async function search(req, res, next) {
     } finally {
       res.send(txs);
     }
+    */
   } catch (searchExecption) {
     logger.info("search Exception | error=" + searchExecption.message);
   }
