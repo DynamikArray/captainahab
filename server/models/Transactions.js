@@ -1,3 +1,5 @@
+const { logger } = require("../util/log");
+
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
@@ -49,5 +51,70 @@ transactionsSchema.plugin(mongoosePaginate);
 transactionsSchema.plugin(aggregatePaginate);
 
 const Transactions = mongoose.model("Transactions", transactionsSchema);
+
+Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit) {
+  try {
+    /* Build Conditions */
+    const andCondition = [{ value: { $gte: Number(minEth) } }];
+    if (maxEth) andCondition.push({ value: { $lte: Number(maxEth) } });
+    if (symbol) andCondition.push({ "tokenMetaData.symbol": { $regex: symbol } });
+
+    /* Join All Conditions */
+    const matchCriteria = {
+      $and: andCondition,
+    };
+
+    /* Query Conditions for recordset page of ids to lookup and unwind in next steps */
+    const txs = await Transactions.aggregatePaginate(
+      Transactions.aggregate([
+        {
+          $match: matchCriteria,
+        },
+        {
+          $project: {
+            _id: 1,
+          },
+        },
+      ]),
+      { sort: { timestamp: -1 }, page, limit }
+    );
+
+    const ids = txs.docs.reduce((acc, tx) => {
+      acc.push(tx._id);
+      return acc;
+    }, []);
+
+    const fullTxs = await Transactions.aggregate([
+      {
+        $match: { _id: { $in: ids } },
+      },
+      {
+        $lookup: {
+          from: "tokensmetadatas",
+          localField: "tokenMetaData.symbol",
+          foreignField: "symbol",
+          as: "tokenMetaData",
+        },
+      },
+      { $unwind: "$tokenMetaData" },
+      {
+        $lookup: {
+          from: "tokenspricedatas",
+          localField: "tokenMetaData.symbol",
+          foreignField: "symbol",
+          as: "tokenPricesData",
+        },
+      },
+      { $unwind: "$tokenPricesData" },
+    ]);
+
+    /* Set this full lookup as our docs */
+    txs.docs = fullTxs;
+    return txs;
+  } catch (e) {
+    logger.error("searchTxList | error=" + e.message);
+    return [];
+  }
+};
 
 module.exports = Transactions;

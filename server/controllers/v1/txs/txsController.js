@@ -11,46 +11,11 @@ async function search(req, res, next) {
   try {
     const minEth = req.query.minEth || 0.00000000001;
     const maxEth = req.query.maxEth || false;
-
-    const symbol = req.query.symbol || "";
-
+    const symbol = req.query.symbol || false;
     const page = req.query.page || 1;
     const limit = req.query.limit || 25;
 
-    const andCondition = [{ value: { $gte: Number(minEth) } }];
-    if (maxEth) andCondition.push({ value: { $lte: Number(maxEth) } });
-    if (symbol) andCondition.push({ "tokenMetaData.symbol": { $regex: symbol } });
-
-    let matchCriteria = {
-      $and: andCondition,
-    };
-
-    const txs = await Transactions.aggregatePaginate(
-      Transactions.aggregate([
-        {
-          $match: matchCriteria,
-        },
-        {
-          $lookup: {
-            from: "tokensmetadatas",
-            localField: "tokenMetaData.symbol",
-            foreignField: "symbol",
-            as: "tokenMetaData",
-          },
-        },
-        { $unwind: "$tokenMetaData" },
-        {
-          $lookup: {
-            from: "tokenspricedatas",
-            localField: "tokenMetaData.symbol",
-            foreignField: "symbol",
-            as: "tokenPricesData",
-          },
-        },
-        { $unwind: "$tokenPricesData" },
-      ]),
-      { sort: { timestamp: -1 }, page, limit }
-    );
+    const txs = await Transactions.searchTxList(minEth, maxEth, symbol, page, limit);
     res.send(txs);
   } catch (searchExecption) {
     logger.info("search Exception | error=" + searchExecption.message);

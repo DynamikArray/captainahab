@@ -27,6 +27,13 @@ export const rowHeaders = [
     align: "right",
   },
   {
+    text: "Chart",
+    value: "tokenMetaData.address",
+    sortable: true,
+    align: "center",
+    width: "70px",
+  },
+  {
     text: "Current Price",
     value: "tokenPricesData.price",
     sortable: true,

@@ -12,7 +12,7 @@
                 autocomplete="off"
                 class="mt-3"
                 v-model="localMinEth"
-                :rules="numberRule"
+                :rules="[numberRule]"
                 name="minEth"
                 label="Min Eth"
                 solo
@@ -34,7 +34,7 @@
                 autocomplete="off"
                 class="mt-3"
                 v-model="localMaxEth"
-                :rules="numberRule"
+                :rules="[numberRule]"
                 name="maxEth"
                 label="Max Eth"
                 solo

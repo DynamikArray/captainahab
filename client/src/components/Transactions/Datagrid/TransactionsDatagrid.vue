@@ -27,6 +27,10 @@
         <h3 class="textShadow" :class="`${buyOrSellColor(item.txAction)}--text`">{{ truncateValue(item.value, 4) }}</h3>
       </template>
 
+      <template v-slot:item.tokenMetaData.address="{ item }">
+        <TokenChartLink :item="item" />
+      </template>
+
       <template v-slot:item.tokenMetaData="{ item }">
         <TokenNameAndSymbol :item="item" />
       </template>
@@ -103,6 +107,7 @@ import { rowHeaders } from "./_headers.js";
 import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 import TransactionFilters from "@/components/Transactions/TransactionFilters";
 
+import TokenChartLink from "@/components/Datatable/FieldTemplates/TokenChartLink";
 import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
 import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
 import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
@@ -130,6 +135,7 @@ export default {
     ServerSidePager,
     TransactionFilters,
     TokenNameAndSymbol,
+    TokenChartLink,
     TokenPrice,
     MarketCap,
     PeriodPriceData,
