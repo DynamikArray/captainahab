@@ -1,4 +1,6 @@
 const { web3 } = require("../util/alchemy");
+const { infura } = require("../util/infura");
+
 const { logger } = require("../util/log");
 
 const Transactions = require("../models/Transactions");
@@ -71,7 +73,10 @@ const blockHelper = {
   //
   formatBlock: async function (tx) {
     try {
-      const result = await web3.eth.getTransaction(tx.hash);
+      //const result = await web3.eth.getTransaction(tx.hash);
+      //moved to infuria?
+      const result = await infura.eth.getTransaction(tx.hash);
+
       const input = blockHelper.decoder.decodeData(result.input);
 
       switch (input.method) {
