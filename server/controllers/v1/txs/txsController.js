@@ -9,15 +9,20 @@ const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
 
 async function search(req, res, next) {
   try {
-    const ethAmount = req.query.ethLimit || 5;
+    const minEth = req.query.minEth || 0.00000000001;
+    const maxEth = req.query.maxEth || false;
+
     const symbol = req.query.symbol || "";
 
     const page = req.query.page || 1;
     const limit = req.query.limit || 25;
 
+    const andCondition = [{ value: { $gte: minEth } }];
+    if (maxEth) andCondition.push({ value: { $lte: maxEth } });
+
     const txs = await Transactions.paginate(
       {
-        value: { $gte: ethAmount },
+        $and: andCondition,
         "tokenMetaData.symbol": { $regex: symbol },
       },
       { sort: { timestamp: -1 }, page, limit }
