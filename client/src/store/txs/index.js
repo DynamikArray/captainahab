@@ -22,7 +22,8 @@ const txs = {
       limit: 0,
     },
     filters: {
-      ethLimit: 5,
+      minEth: "",
+      maxEth: "",
       symbol: "",
     },
   },
