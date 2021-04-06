@@ -16,10 +16,10 @@
       <template v-slot:item.timestamp="{ item }">
         <div class="textShadow d-flex flex-column">
           <div class="d-flex align-center justify-start">
-            <Timeago :key="item.hash" :datetime="new Date(item.timestamp * 1000)" class="text-subtitle-2" />
+            <Timeago :key="item.hash" :datetime="item.createdAt" class="text-subtitle-2" />
           </div>
           <div class="d-flex align-center justify-start grey--text" style="font-size: 75%">
-            {{ new Date(item.timestamp * 1000) | dateTime }}
+            {{ new Date(item.createdAt) | dateTime }}
           </div>
         </div>
       </template>

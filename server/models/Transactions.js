@@ -70,15 +70,33 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
         {
           $match: matchCriteria,
         },
+        { $sort: { createdAt: -1 } },
+        { $limit: 5000 },
         {
-          $project: {
-            _id: 1,
+          $lookup: {
+            from: "tokensmetadatas",
+            localField: "tokenMetaData.symbol",
+            foreignField: "symbol",
+            as: "tokenMetaData",
           },
         },
+        { $unwind: "$tokenMetaData" },
+        {
+          $lookup: {
+            from: "tokenspricedatas",
+            localField: "tokenMetaData.symbol",
+            foreignField: "symbol",
+            as: "tokenPricesData",
+          },
+        },
+        { $unwind: "$tokenPricesData" },
       ]),
-      { sort: { timestamp: -1 }, page, limit }
+      { sort: { _id: -1 }, page, limit }
     );
 
+    return txs;
+
+    /*
     const ids = txs.docs.reduce((acc, tx) => {
       acc.push(tx._id);
       return acc;
@@ -87,9 +105,6 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
     const fullTxs = await Transactions.aggregate([
       {
         $match: { _id: { $in: ids } },
-      },
-      {
-        $sort: { timestamp: -1 },
       },
       {
         $lookup: {
@@ -109,11 +124,15 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
         },
       },
       { $unwind: "$tokenPricesData" },
+      {
+        $sort: { timestamp: -1 },
+      },
     ]);
 
-    /* Set this full lookup as our docs */
+    // Set this full lookup as our docs
     txs.docs = fullTxs;
     return txs;
+    */
   } catch (e) {
     logger.error("searchTxList | error=" + e.message);
     return [];

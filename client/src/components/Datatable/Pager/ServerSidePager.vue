@@ -46,7 +46,7 @@ export default {
       } else {
         endCount = this.page * this.pageLimit;
       }
-      return `Results ${startCount} to ${endCount} of ${this.totalRecords} total`;
+      return `Results ${startCount} to ${endCount} Limited to first 5000 of ${this.totalRecords} total`;
     },
   },
   methods: {

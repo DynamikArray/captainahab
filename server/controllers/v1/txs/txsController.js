@@ -9,7 +9,7 @@ const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
 
 async function search(req, res, next) {
   try {
-    const minEth = req.query.minEth || 0.00000000001;
+    const minEth = req.query.minEth || 0.5;
     const maxEth = req.query.maxEth || false;
     const symbol = req.query.symbol || false;
     const page = req.query.page || 1;

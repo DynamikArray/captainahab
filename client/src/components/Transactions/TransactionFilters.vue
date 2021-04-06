@@ -102,11 +102,11 @@ export default {
   },
   data: () => ({
     validForm: false,
-    localMinEth: "",
+    localMinEth: 0.5,
     localMaxEth: "",
     localSymbol: "",
     numberRule: (v) => {
-      if (!v.trim()) return true;
+      if (!v) return true;
       if (!isNaN(parseFloat(v)) && v >= 0) return true;
       return "Number has to be greater than 0";
     },
