@@ -1,7 +1,7 @@
 <template>
-  <a class="underlineNone" :href="chartUrl" target="_blank">
+  <v-btn color="orange darken-2 px-2" :href="chartUrl" target="_blank" style="min-width: 20px">
     <v-icon>fas fa-chart-area</v-icon>
-  </a>
+  </v-btn>
 </template>
 
 <script>

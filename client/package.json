@@ -13,6 +13,7 @@
     "socket.io-client": "2.3.1",
     "vue": "^2.6.11",
     "vue-currency-filter": "^5.2.0",
+    "vue-date-fns": "^2.0.1",
     "vue-router": "^3.2.0",
     "vue-socket.io-extended": "^4.1.0",
     "vue-timeago": "^5.1.3",

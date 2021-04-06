@@ -3,7 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+
 import("./plugins/vueToastr");
+import("./plugins/vueSocketIo");
 
 import VueCurrencyFilter from "vue-currency-filter";
 Vue.use(VueCurrencyFilter, [
@@ -37,16 +39,15 @@ Vue.use(VueCurrencyFilter, [
   },
 ]);
 
+import { createDateFilter } from "vue-date-fns";
+Vue.filter("date", createDateFilter("MMM dd, yyyy"));
+Vue.filter("dateTime", createDateFilter("MMM dd, yyyy hh:mm a"));
+
 import VueTimeago from "vue-timeago";
 Vue.use(VueTimeago, {
   name: "Timeago", // Component name, `Timeago` by default
   locale: "en", // Default locale
 });
-
-import VueSocketIOExt from "vue-socket.io-extended";
-import io from "socket.io-client";
-const socket = io(process.env.BASE_URL);
-Vue.use(VueSocketIOExt, socket, { store });
 
 Vue.config.productionTip = false;
 const app = new Vue({
