@@ -71,7 +71,6 @@ const txs = {
   },
   actions: {
     socket_newBlocksAdded({ commit }, data) {
-      console.log("data->", data);
       commit(`txs/${NEW_BLOCK_RESULTS}`, data, { root: true });
     },
     async [SEARCH_TXS_RESULTS_GOTO_PAGE]({ dispatch, commit }, page) {
