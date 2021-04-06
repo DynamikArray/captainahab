@@ -16,5 +16,6 @@ Search / Filter Transactions on Uniswap to gleam market insights.
 Alchemy - getAssetTransfers, and getTokenMetaData calls
 Infura - newBlockHeaders
 Chainstack - getTransaction
+Nomics - Token Coin Prices List
 
 Splitting all the calls up should allows us to constantly ingest block headers from Infura, pass that to Alchemy to get Transactions using Asset Transfers matching uniswap contract, and then get that Transaction from Chainstack Api's.

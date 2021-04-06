@@ -8,13 +8,14 @@ import {
   SEARCH_TXS_RESULTS,
   SEARCH_TXS_RESULTS_PAGINATION_CHANGE,
   SEARCH_TXS_RESULTS_FILTER_UPDATE,
-  TOTAL_TXS_COUNT_RESULTS,
+  NEW_BLOCK_RESULTS,
 } from "@/store/mutationTypes";
 
 const txs = {
   namespaced: true,
   state: {
     txsCount: 0,
+    blockNumber: 0,
     loading: false,
     items: [],
     pager: {
@@ -43,6 +44,9 @@ const txs = {
     getTxsCount: (state) => {
       return state.txsCount;
     },
+    getBlockNumber: (state) => {
+      return state.blockNumber;
+    },
   },
   mutations: {
     [SEARCH_TXS_RESULTS](state, result) {
@@ -59,13 +63,16 @@ const txs = {
     [SEARCH_TXS_RESULTS_FILTER_UPDATE](state, filter) {
       state.filters = { ...state.filters, ...filter };
     },
-    [TOTAL_TXS_COUNT_RESULTS](state, { txsCount }) {
-      state.txsCount = txsCount;
+    [NEW_BLOCK_RESULTS](state, payload) {
+      const { txsCount, blockNumber } = payload;
+      if (txsCount) state.txsCount = txsCount;
+      if (blockNumber) state.blockNumber = blockNumber;
     },
   },
   actions: {
-    socket_txscount({ commit }, txsCount) {
-      commit(`txs/${TOTAL_TXS_COUNT_RESULTS}`, { txsCount }, { root: true });
+    socket_newBlocksAdded({ commit }, data) {
+      console.log("data->", data);
+      commit(`txs/${NEW_BLOCK_RESULTS}`, data, { root: true });
     },
     async [SEARCH_TXS_RESULTS_GOTO_PAGE]({ dispatch, commit }, page) {
       commit(`txs/${SEARCH_TXS_RESULTS_PAGINATION_CHANGE}`, page, { root: true });
@@ -102,7 +109,7 @@ const txs = {
         { root: true }
       );
 
-      if (result.data) commit(`${TOTAL_TXS_COUNT_RESULTS}`, result.data);
+      if (result.data) commit(`${NEW_BLOCK_RESULTS}`, { ...result.data });
     },
   },
 };

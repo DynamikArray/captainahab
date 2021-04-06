@@ -24,7 +24,7 @@ const blockHelper = {
         logger.info("New Block Headers | block=" + result.number);
         await blockHelper.loadBlock(result.number);
         const txsCount = await Transactions.countDocuments({});
-        em.emit("NewBlocksLoaded", txsCount);
+        em.emit("NewBlocksLoaded", { txsCount, blockNumber: result.number });
       }
     });
   },
