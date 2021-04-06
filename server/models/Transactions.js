@@ -89,6 +89,9 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
         $match: { _id: { $in: ids } },
       },
       {
+        $sort: { timestamp: -1 },
+      },
+      {
         $lookup: {
           from: "tokensmetadatas",
           localField: "tokenMetaData.symbol",
