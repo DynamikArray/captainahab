@@ -14,9 +14,14 @@
       hide-default-footer
     >
       <template v-slot:item.timestamp="{ item }">
-        <div class="textShadow d-flex flex-column">
+        <div class="textShadow d-flex flex-column my-1">
           <div class="d-flex align-center justify-start">
-            <Timeago :key="item.hash" :datetime="item.createdAt" class="text-subtitle-2" />
+            <Timeago
+              :key="item.hash"
+              :datetime="item.createdAt"
+              class="text-caption font-weight-thin mb-1"
+              style="line-height: 1.2"
+            />
           </div>
           <div class="d-flex align-center justify-start grey--text" style="font-size: 75%">
             {{ new Date(item.createdAt) | dateTime }}
