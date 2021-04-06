@@ -11,19 +11,29 @@ const uniswapHelper = {
 
   BuyOrder: async ({ category, hash, from, value, blockNum }, input) => {
     const tokenAddress = `0x${input.inputs[1][1]}`;
-    const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp };
+    try {
+      const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
+      const numberBlock = web3.utils.hexToNumberString(blockNum);
+      //const { timestamp } = await web3.eth.getBlock(numberBlock);
+      return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp: Date.now() };
+    } catch (BuyOrderException) {
+      logger.error("BuyOrderException | error=" + BuyOrderException.message + " | input=" + JSON.stringify(input));
+      return false;
+    }
   },
 
   SellOrder: async ({ to, value, hash, blockNum }, input) => {
     const from = input.inputs[3];
     const tokenAddress = `0x${input.inputs[2][0]}`;
-    const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
-    const numberBlock = web3.utils.hexToNumberString(blockNum);
-    const { timestamp } = await web3.eth.getBlock(numberBlock);
-    return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp };
+    try {
+      const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
+      const numberBlock = web3.utils.hexToNumberString(blockNum);
+      //const { timestamp } = await web3.eth.getBlock(numberBlock);
+      return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp: Date.now() };
+    } catch (SellOrderException) {
+      logger.error("SellOrderException | error=" + SellOrderException.message + " | input=" + JSON.stringify(input));
+      return false;
+    }
   },
 
   checkTokenMetaData: async (tokenAddress) => {

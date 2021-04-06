@@ -1,5 +1,6 @@
 const { web3 } = require("../util/alchemy");
 const { infura } = require("../util/infura");
+const { chainstack } = require("../util/chainstack");
 
 const { logger } = require("../util/log");
 
@@ -18,7 +19,7 @@ const blockHelper = {
   //
   //
   listenForNewBlocks: async function (em) {
-    web3.eth.subscribe("newBlockHeaders", async (err, result) => {
+    infura.eth.subscribe("newBlockHeaders", async (err, result) => {
       if (!err) {
         logger.info("New Block Headers | block=" + result.number);
         await blockHelper.loadBlock(result.number);
@@ -75,7 +76,7 @@ const blockHelper = {
     try {
       //const result = await web3.eth.getTransaction(tx.hash);
       //moved to infuria?
-      const result = await infura.eth.getTransaction(tx.hash);
+      const result = await chainstack.eth.getTransaction(tx.hash);
 
       const input = blockHelper.decoder.decodeData(result.input);
 
