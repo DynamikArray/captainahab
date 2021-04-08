@@ -2,3 +2,5 @@
 .env
 /node_modules
 newrelic_agent.log
+
+ahab.bat
