@@ -26,7 +26,7 @@ const blockHelper = {
         logger.info("New Block Headers | block=" + result.number);
         blocks.push(result.number);
 
-        if (blocks.length >= 3) {
+        if (blocks.length >= 2) {
           const startingBlock = blocks.shift();
           const endingBlock = blocks.shift();
           logger.info("Loading Blocks | startingBlock=" + startingBlock + " | endingBlock=" + endingBlock);
