@@ -1,8 +1,7 @@
 <template>
-  <div class="d-flex flex-grow-1 my-5">
+  <div class="d-flex flex-grow-1">
     <v-data-table
       ref="dataTable"
-      :page.sync="pagination.page"
       :items-per-page="25"
       class="flex-grow-1"
       :headers="rowHeaders"
@@ -11,8 +10,23 @@
       sortBy="timestamp"
       :sortDesc="true"
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
-      hide-default-footer
     >
+      <template v-slot:top="{ pagination, options, updateOptions }">
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center justify-space-between"><!--Placeholder --></div>
+          <div class="d-flex align-center justify-space-between">
+            <v-data-footer
+              style="border-width: 0px !important"
+              :pagination="pagination"
+              :options="options"
+              @update:options="updateOptions"
+              items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+            />
+          </div>
+        </div>
+        <v-divider></v-divider>
+      </template>
+
       <template v-slot:item.timestamp="{ item }">
         <div class="textShadow d-flex flex-column my-1">
           <div class="d-flex align-center justify-start">
@@ -74,52 +88,13 @@
           ><v-icon>fas fa-wallet</v-icon></v-btn
         >
       </template>
-
-      <template v-slot:top="{}">
-        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
-          <div class="d-flex align-start justify-start flex-grow-1">
-            <TransactionFilters class="ml-3" />
-          </div>
-          <div class="d-flex align-center caption">
-            <ServerSidePager
-              v-if="pager.page > 0"
-              :page="pager.page"
-              :totalPages="pager.totalPages"
-              :totalRecords="pager.totalDocs"
-              :pageLimit="pager.limit"
-              @pageChange="handlePageChange"
-            />
-          </div>
-        </div>
-      </template>
-
-      <template v-slot:footer="{}">
-        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
-          <div class="d-flex flex-grow-1"></div>
-          <div class="d-flex align-center caption">
-            <ServerSidePager
-              v-if="pager.page > 0"
-              :page="pager.page"
-              :totalPages="pager.totalPages"
-              :totalRecords="pager.totalDocs"
-              :pageLimit="pager.limit"
-              @pageChange="handlePageChange"
-            />
-          </div>
-        </div>
-      </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-import { SEARCH_TXS_RESULTS_GOTO_PAGE } from "@/store/actionTypes";
 import { rowHeaders } from "./_headers.js";
-
 import fieldHelpers from "@/components/Datatable/fieldHelpers";
-
-import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
-import TransactionFilters from "@/components/Transactions/TransactionFilters";
 
 import TokenChartLink from "@/components/Datatable/FieldTemplates/TokenChartLink";
 import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
@@ -128,7 +103,7 @@ import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
 import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
 
 export default {
-  name: "TransactionDataGrid",
+  name: "IncomingTxsDatagrid",
   props: {
     loading: {
       type: Boolean,
@@ -138,14 +113,8 @@ export default {
       type: [Array, Boolean],
       default: false,
     },
-    pager: {
-      type: [Object, Boolean],
-      default: false,
-    },
   },
   components: {
-    ServerSidePager,
-    TransactionFilters,
     TokenNameAndSymbol,
     TokenChartLink,
     TokenPrice,
@@ -154,18 +123,8 @@ export default {
   },
   data: () => ({
     rowHeaders,
-    pagination: {
-      descending: true,
-      rowsPerPageItems: [10, 20, 50, 100],
-    },
     fieldHelpers,
   }),
-  methods: {
-    handlePageChange(page) {
-      this.$vuetify.goTo(this.$refs.dataTable);
-      this.$store.dispatch(`txs/${SEARCH_TXS_RESULTS_GOTO_PAGE}`, page, { root: true });
-    },
-  },
 };
 </script>
 

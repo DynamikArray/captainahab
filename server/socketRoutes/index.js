@@ -5,5 +5,6 @@ module.exports = (io, em) => {
     logger.info("Socket Connection established | socketId=" + socket.id);
 
     require("./txsCount")(socket, em);
+    require("./incomingTxs")(socket, em);
   });
 };

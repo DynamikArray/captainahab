@@ -101,4 +101,39 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
   }
 };
 
+Transactions.getTxsByIds = async function (txIds) {
+  try {
+    const txs = await Transactions.aggregate([
+      {
+        $match: {
+          _id: { $in: txIds },
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $lookup: {
+          from: "tokensmetadatas",
+          localField: "tokenMetaData.address",
+          foreignField: "address",
+          as: "tokenMetaData",
+        },
+      },
+      { $unwind: "$tokenMetaData" },
+      {
+        $lookup: {
+          from: "tokenspricedatas",
+          localField: "tokenMetaData.symbol",
+          foreignField: "symbol",
+          as: "tokenPricesData",
+        },
+      },
+      { $unwind: "$tokenPricesData" },
+    ]);
+    return txs;
+  } catch (GetTxsByIdsException) {
+    logger.error("GetTxsByIdsException | error=" + JSON.stringify(GetTxsByIdsException.message));
+    return [];
+  }
+};
+
 module.exports = Transactions;

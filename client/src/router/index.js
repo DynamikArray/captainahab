@@ -2,6 +2,9 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
+const { trendingRoutes } = require("./routes/trending");
+const { incomingRoutes } = require("./routes/incoming");
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -10,12 +13,8 @@ const routes = [
     name: "Home",
     component: Home,
   },
-
-  {
-    path: "/trending",
-    name: "Trending",
-    component: () => import(/* webpackChunkName: "Trending" */ "../views/Trending.vue"),
-  },
+  trendingRoutes,
+  incomingRoutes,
 ];
 
 const router = new VueRouter({

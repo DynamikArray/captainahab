@@ -27,12 +27,15 @@ const blockHelper = {
         blocks.push(result.number);
 
         if (blocks.length >= 2) {
-          const startingBlock = blocks.shift();
-          const endingBlock = blocks.shift();
+          const startingBlock = blocks.sort().shift();
+          const endingBlock = blocks.sort().shift();
           logger.info("Loading Blocks | startingBlock=" + startingBlock + " | endingBlock=" + endingBlock);
-          await blockHelper.loadBlocks(startingBlock, endingBlock);
+
+          const txIds = await blockHelper.loadBlocks(startingBlock, endingBlock);
+          await em.emit("IncomingTxs", { txIds }); //emit to socketRoutes for handling
+
           const txsCount = await Transactions.countDocuments({});
-          em.emit("NewBlocksLoaded", { txsCount, blockNumber: result.number });
+          await em.emit("NewBlocksLoaded", { txsCount, blockNumber: result.number }); //emit to socketRoutes for handling
         } else {
           logger.info("Block added to queue | block=" + result.number);
         }
@@ -42,7 +45,7 @@ const blockHelper = {
 
   //
   //
-  //
+  /* DEPRECATED FOR loadBlocks PLURAL to save API CREDITS
   loadBlock: async function (blockNumber) {
     try {
       const hexBlock = web3.utils.numberToHex(blockNumber);
@@ -66,6 +69,7 @@ const blockHelper = {
       logger.error("loadBlockException error=", loadBlockException.message);
     }
   },
+  -- END DEPRECATED METHOID */
 
   loadBlocks: async function (startingBlock, endingBlock) {
     try {
@@ -87,8 +91,13 @@ const blockHelper = {
       const savedResults = await Transactions.insertMany(results);
 
       logger.info("Total Results Saved: " + savedResults.length);
-    } catch (loadBlockException) {
-      logger.error("loadBlockException error=", loadBlockException.message);
+
+      return savedResults.reduce((acc, tx) => {
+        acc.push(tx._id);
+        return acc;
+      }, []);
+    } catch (loadBlocksException) {
+      logger.error("loadBlocksException error=", JSON.stringify(loadBlocksException));
     }
   },
 

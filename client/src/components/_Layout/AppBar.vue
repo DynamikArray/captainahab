@@ -24,6 +24,9 @@
         <div class="d-flex align-center mx-3">
           <v-btn small text :to="{ name: 'Trending' }">Trending</v-btn>
         </div>
+        <div class="d-flex align-center mx-3">
+          <v-badge overlap color="green"> <v-btn small text :to="{ name: 'Incoming' }">Incoming</v-btn></v-badge>
+        </div>
       </div>
 
       <div class="d-flex align-center">
