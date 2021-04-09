@@ -75,8 +75,8 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
         {
           $lookup: {
             from: "tokensmetadatas",
-            localField: "tokenMetaData.symbol",
-            foreignField: "symbol",
+            localField: "tokenMetaData.address",
+            foreignField: "address",
             as: "tokenMetaData",
           },
         },
@@ -95,44 +95,6 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
     );
 
     return txs;
-
-    /*
-    const ids = txs.docs.reduce((acc, tx) => {
-      acc.push(tx._id);
-      return acc;
-    }, []);
-
-    const fullTxs = await Transactions.aggregate([
-      {
-        $match: { _id: { $in: ids } },
-      },
-      {
-        $lookup: {
-          from: "tokensmetadatas",
-          localField: "tokenMetaData.symbol",
-          foreignField: "symbol",
-          as: "tokenMetaData",
-        },
-      },
-      { $unwind: "$tokenMetaData" },
-      {
-        $lookup: {
-          from: "tokenspricedatas",
-          localField: "tokenMetaData.symbol",
-          foreignField: "symbol",
-          as: "tokenPricesData",
-        },
-      },
-      { $unwind: "$tokenPricesData" },
-      {
-        $sort: { timestamp: -1 },
-      },
-    ]);
-
-    // Set this full lookup as our docs
-    txs.docs = fullTxs;
-    return txs;
-    */
   } catch (e) {
     logger.error("searchTxList | error=" + e.message);
     return [];

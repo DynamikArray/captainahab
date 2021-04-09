@@ -95,8 +95,8 @@ export default {
   name: "TransactionFilters",
   watch: {
     filters: function (filters) {
-      if (filters.minEth) this.localMinEth = filters.localMinEth;
-      if (filters.maxEth) this.localMaxEth = filters.localMaxEth;
+      if (filters.minEth) this.localMinEth = filters.minEth;
+      if (filters.maxEth) this.localMaxEth = filters.maxEth;
       if (filters.symbol) this.localSymbol = filters.symbol;
     },
   },
