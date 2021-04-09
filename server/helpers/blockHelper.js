@@ -19,12 +19,23 @@ const blockHelper = {
   //
   //
   listenForNewBlocks: async function (em) {
+    const blocks = [];
+
     infura.eth.subscribe("newBlockHeaders", async (err, result) => {
       if (!err) {
         logger.info("New Block Headers | block=" + result.number);
-        await blockHelper.loadBlock(result.number);
-        const txsCount = await Transactions.countDocuments({});
-        em.emit("NewBlocksLoaded", { txsCount, blockNumber: result.number });
+        blocks.push(result.number);
+
+        if (blocks.length >= 3) {
+          const startingBlock = blocks.shift();
+          const endingBlock = blocks.shift();
+          logger.info("Loading Blocks | startingBlock=" + startingBlock + " | endingBlock=" + endingBlock);
+          await blockHelper.loadBlocks(startingBlock, endingBlock);
+          const txsCount = await Transactions.countDocuments({});
+          em.emit("NewBlocksLoaded", { txsCount, blockNumber: result.number });
+        } else {
+          logger.info("Block added to queue | block=" + result.number);
+        }
       }
     });
   },
@@ -42,6 +53,31 @@ const blockHelper = {
       const { transfers } = await web3.alchemy.getAssetTransfers({
         fromBlock: hexBlock,
         toBlock: hexBlock,
+        category: ["external", "internal", "token"],
+        toAddress: ADDRESS_UNISWAP_ROUTER,
+        contractAddresses: [ADDRESS_UNISWAP_ROUTER],
+      });
+
+      const results = await blockHelper.formatBlocks(transfers);
+      const savedResults = await Transactions.insertMany(results);
+
+      logger.info("Total Results Saved: " + savedResults.length);
+    } catch (loadBlockException) {
+      logger.error("loadBlockException error=", loadBlockException.message);
+    }
+  },
+
+  loadBlocks: async function (startingBlock, endingBlock) {
+    try {
+      const hexStartBlock = web3.utils.numberToHex(startingBlock);
+      const hexEndBlock = web3.utils.numberToHex(endingBlock);
+
+      const abi = await abiHelper.getAbiByAddress(ADDRESS_UNISWAP_ROUTER);
+      blockHelper.decoder = new InputDataDecoder(abi);
+
+      const { transfers } = await web3.alchemy.getAssetTransfers({
+        fromBlock: hexStartBlock,
+        toBlock: hexEndBlock,
         category: ["external", "internal", "token"],
         toAddress: ADDRESS_UNISWAP_ROUTER,
         contractAddresses: [ADDRESS_UNISWAP_ROUTER],
