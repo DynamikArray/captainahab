@@ -1,32 +1,17 @@
 <template>
   <div class="d-flex flex-grow-1">
     <v-data-table
-      ref="dataTable"
-      :items-per-page="25"
+      ref="IncomingTxsDatagrid"
+      :page.sync="pager.page"
       class="flex-grow-1"
       :headers="rowHeaders"
       :loading="loading"
       :items="items"
       sortBy="timestamp"
       :sortDesc="true"
-      :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
+      hide-default-footer
+      :options="{ page: pager.page, itemsPerPage: pager.limit }"
     >
-      <template v-slot:top="{ pagination, options, updateOptions }">
-        <div class="d-flex align-center justify-space-between">
-          <div class="d-flex align-center justify-space-between"><!--Placeholder --></div>
-          <div class="d-flex align-center justify-space-between">
-            <v-data-footer
-              style="border-width: 0px !important"
-              :pagination="pagination"
-              :options="{ options }"
-              @update:options="updateOptions"
-              items-per-page-text="$vuetify.dataTable.itemsPerPageText"
-            />
-          </div>
-        </div>
-        <v-divider></v-divider>
-      </template>
-
       <template v-slot:item.timestamp="{ item }">
         <TransactionTime :item="item" />
       </template>
@@ -70,6 +55,42 @@
       <template v-slot:item.from="{ item }">
         <WalletLink :item="item" />
       </template>
+
+      <template v-slot:top="{}">
+        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
+          <div class="d-flex align-start justify-start flex-grow-1">
+            <!--PLACEHOLDER-->
+          </div>
+          <div class="d-flex align-center caption">
+            <ItemsPerPageDropdown :limit="pager.limit" @limitChanged="limitChanged" />
+            <ServerSidePager
+              v-if="pager.page > 0"
+              :page="pager.page"
+              :totalPages="pager.totalPages"
+              :totalRecords="pager.totalRecords"
+              :pageLimit="pager.limit"
+              @pageChange="handlePageChange"
+            />
+          </div>
+        </div>
+      </template>
+
+      <template v-slot:footer="{}">
+        <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
+          <div class="d-flex flex-grow-1"><!--PLACEHOLDER--></div>
+          <div class="d-flex align-center caption">
+            <ItemsPerPageDropdown :limit="pager.limit" @limitChanged="limitChanged" />
+            <ServerSidePager
+              v-if="pager.page > 0"
+              :page="pager.page"
+              :totalPages="pager.totalPages"
+              :totalRecords="pager.totalRecords"
+              :pageLimit="pager.limit"
+              @pageChange="handlePageChange"
+            />
+          </div>
+        </div>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -89,6 +110,9 @@ import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameA
 import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
 import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
 
+import ItemsPerPageDropdown from "@/components/Datatable/Pager/ItemsPerPageDropdown";
+import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
+
 export default {
   name: "IncomingTxsDatagrid",
   props: {
@@ -99,6 +123,14 @@ export default {
     items: {
       type: [Array, Boolean],
       default: false,
+    },
+  },
+  watch: {
+    items: function (val) {
+      if (val && val.length) {
+        this.pager.totalRecords = val.length;
+        this.pager.totalPages = Math.ceil(this.pager.totalRecords / this.pager.limit);
+      }
     },
   },
   components: {
@@ -112,11 +144,29 @@ export default {
     TokenPrice,
     MarketCap,
     PeriodPriceData,
+    ItemsPerPageDropdown,
+    ServerSidePager,
   },
   data: () => ({
     rowHeaders,
     fieldHelpers,
+    pager: {
+      page: 1,
+      totalPages: 0,
+      totalRecords: 0,
+      limit: 15,
+    },
   }),
+  methods: {
+    limitChanged(limit) {
+      this.pager.limit = limit;
+      this.$vuetify.goTo(this.$refs.IncomingTxsDatagrid);
+    },
+    handlePageChange(page) {
+      this.pager.page = page;
+      this.$vuetify.goTo(this.$refs.IncomingTxsDatagrid);
+    },
+  },
 };
 </script>
 

@@ -102,6 +102,11 @@ Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit)
 };
 
 Transactions.getTxsByIds = async function (txIds) {
+  if (!txIds) {
+    logger.error("getTxsByIds | error=No TxIds | txIds=" + JSON.stringify(txIds));
+    return [];
+  }
+
   try {
     const txs = await Transactions.aggregate([
       {
