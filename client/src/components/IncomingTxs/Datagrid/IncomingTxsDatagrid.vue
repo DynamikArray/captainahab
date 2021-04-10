@@ -62,14 +62,14 @@
             <!--PLACEHOLDER-->
           </div>
           <div class="d-flex align-center caption">
-            <ItemsPerPageDropdown :limit="pager.limit" @limitChanged="limitChanged" />
-            <ServerSidePager
+            <ServerSideWithPageOptions
+              @limitChange="handleLimitChange"
+              @pageChange="handlePageChange"
               v-if="pager.page > 0"
               :page="pager.page"
               :totalPages="pager.totalPages"
               :totalRecords="pager.totalRecords"
-              :pageLimit="pager.limit"
-              @pageChange="handlePageChange"
+              :limit="pager.limit"
             />
           </div>
         </div>
@@ -79,14 +79,14 @@
         <div class="d-flex flex-grow-1 secondary darken-1 pa-1">
           <div class="d-flex flex-grow-1"><!--PLACEHOLDER--></div>
           <div class="d-flex align-center caption">
-            <ItemsPerPageDropdown :limit="pager.limit" @limitChanged="limitChanged" />
-            <ServerSidePager
+            <ServerSideWithPageOptions
+              @limitChange="handleLimitChange"
+              @pageChange="handlePageChange"
               v-if="pager.page > 0"
               :page="pager.page"
               :totalPages="pager.totalPages"
               :totalRecords="pager.totalRecords"
-              :pageLimit="pager.limit"
-              @pageChange="handlePageChange"
+              :limit="pager.limit"
             />
           </div>
         </div>
@@ -110,8 +110,7 @@ import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameA
 import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
 import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
 
-import ItemsPerPageDropdown from "@/components/Datatable/Pager/ItemsPerPageDropdown";
-import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
+import ServerSideWithPageOptions from "@/components/Datatable/Pager/ServerSideWithPageOptions";
 
 export default {
   name: "IncomingTxsDatagrid",
@@ -144,8 +143,8 @@ export default {
     TokenPrice,
     MarketCap,
     PeriodPriceData,
-    ItemsPerPageDropdown,
-    ServerSidePager,
+
+    ServerSideWithPageOptions,
   },
   data: () => ({
     rowHeaders,
@@ -158,7 +157,7 @@ export default {
     },
   }),
   methods: {
-    limitChanged(limit) {
+    handleLimitChange(limit) {
       this.pager.limit = limit;
       this.$vuetify.goTo(this.$refs.IncomingTxsDatagrid);
     },
