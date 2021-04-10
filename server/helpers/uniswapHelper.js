@@ -4,17 +4,19 @@ const { models } = require("../models/mongoose");
 
 const walletActions = { BUY: "Buy", SELL: "Sell" };
 
+const { factoryAddress, factoryABI } = require("../abiData/uniswapFactory");
+
 const uniswapHelper = {
   uniswapRouterAddress: () => {
     return "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
   },
 
   BuyOrder: async ({ category, hash, from, value, blockNum }, input) => {
-    const tokenAddress = `0x${input.inputs[1][1]}`;
+    const tokenAddress = `0x${input.inputs[1].pop()}`;
     try {
       const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
+      //const tokenLiquidity = await uniswapHelper.checkTokenLiquidity(tokenAddress);
       const numberBlock = web3.utils.hexToNumberString(blockNum);
-      //const { timestamp } = await web3.eth.getBlock(numberBlock);
       return { txAction: walletActions.BUY, from, value, tokenMetaData, category, hash, timestamp: Date.now() };
     } catch (BuyOrderException) {
       logger.error("BuyOrderException | error=" + BuyOrderException.message + " | input=" + JSON.stringify(input));
@@ -27,13 +29,22 @@ const uniswapHelper = {
     const tokenAddress = `0x${input.inputs[2][0]}`;
     try {
       const tokenMetaData = await uniswapHelper.checkTokenMetaData(tokenAddress);
+      const tokenLiquidity = await uniswapHelper.checkTokenLiquidity(tokenAddress);
       const numberBlock = web3.utils.hexToNumberString(blockNum);
-      //const { timestamp } = await web3.eth.getBlock(numberBlock);
       return { txAction: walletActions.SELL, from, value, hash, tokenMetaData, timestamp: Date.now() };
     } catch (SellOrderException) {
       logger.error("SellOrderException | error=" + SellOrderException.message + " | input=" + JSON.stringify(input));
       return false;
     }
+  },
+
+  /**
+   *  WIP
+   */
+  checkTokenLiquidity: async (tokenAddress) => {
+    const factoryContract = new web3.eth.Contract(factoryABI, factoryAddress);
+    const exchangeAddress = factoryContract.methods.getExchange(tokenAddress);
+    return true;
   },
 
   checkTokenMetaData: async (tokenAddress) => {
