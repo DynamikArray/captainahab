@@ -1,11 +1,11 @@
 <template>
-  <v-navigation-drawer app absolute :mini-variant.sync="drawer">
+  <v-navigation-drawer app absolute :mini-variant="drawer">
     <div class="" style="margin-top: 60px">
       <!-- HEADER SPACER -->
     </div>
 
-    <div class="" style="">
-      <h4 class="text-center grey--text">Menu</h4>
+    <div class="text-center">
+      <h4 class="grey--text">Menu</h4>
       <v-divider class="mt-2" />
     </div>
 

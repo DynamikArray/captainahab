@@ -1,5 +1,7 @@
 <template>
-  <div class="text-h6 textShadow">{{ formattedPrice }}</div>
+  <v-slide-x-reverse-transition mode="out-in">
+    <div :key="`transition_TokenPrice_${item._id}`" class="text-h6 textShadow">{{ formattedPrice }}</div>
+  </v-slide-x-reverse-transition>
 </template>
 
 <script>

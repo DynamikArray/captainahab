@@ -14,29 +14,15 @@
       hide-default-footer
     >
       <template v-slot:item.timestamp="{ item }">
-        <div class="textShadow d-flex flex-column my-1">
-          <div class="d-flex align-center justify-start">
-            <Timeago
-              :key="item.hash"
-              :datetime="item.createdAt"
-              class="text-caption font-weight-thin mb-1"
-              style="line-height: 1.2"
-            />
-          </div>
-          <div class="d-flex align-center justify-start grey--text" style="font-size: 75%">
-            {{ new Date(item.createdAt) | dateTime }}
-          </div>
-        </div>
+        <TransactionTime :item="item" />
       </template>
 
       <template v-slot:item.txAction="{ item }">
-        <h4 class="textShadow" :class="fieldHelpers.buyOrSellColor(item.txAction)">{{ item.txAction }}</h4>
+        <BuyOrSellAction :item="item" />
       </template>
 
       <template v-slot:item.value="{ item }">
-        <h3 class="textShadow" :class="`${fieldHelpers.buyOrSellColor(item.txAction)}--text`">
-          {{ fieldHelpers.truncateValue(item.value, 4) }}
-        </h3>
+        <TxValue :item="item" />
       </template>
 
       <template v-slot:item.tokenMetaData.address="{ item }">
@@ -64,15 +50,11 @@
       </template>
 
       <template v-slot:item.hash="{ item }">
-        <v-btn color="success" :href="fieldHelpers.linkToEtherscanTx(item.hash)" target="_blank" style="min-width: 32px"
-          ><v-icon>fab fa-ethereum</v-icon></v-btn
-        >
+        <HashLink :item="item" />
       </template>
 
       <template v-slot:item.from="{ item }">
-        <v-btn color="primary" :href="fieldHelpers.linkToEtherscanAddress(item.from)" target="_blank" style="min-width: 32px"
-          ><v-icon>fas fa-wallet</v-icon></v-btn
-        >
+        <WalletLink :item="item" />
       </template>
 
       <template v-slot:top="{}">
@@ -116,11 +98,14 @@
 import { SEARCH_TXS_RESULTS_GOTO_PAGE } from "@/store/actionTypes";
 import { rowHeaders } from "./_headers.js";
 
-import fieldHelpers from "@/components/Datatable/fieldHelpers";
-
 import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 import TransactionFilters from "@/components/Transactions/TransactionFilters";
 
+import WalletLink from "@/components/Datatable/FieldTemplates/WalletLink";
+import HashLink from "@/components/Datatable/FieldTemplates/HashLink";
+import TxValue from "@/components/Datatable/FieldTemplates/TxValue";
+import BuyOrSellAction from "@/components/Datatable/FieldTemplates/BuyOrSellAction";
+import TransactionTime from "@/components/Datatable/FieldTemplates/TransactionTime";
 import TokenChartLink from "@/components/Datatable/FieldTemplates/TokenChartLink";
 import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
 import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
@@ -146,6 +131,11 @@ export default {
   components: {
     ServerSidePager,
     TransactionFilters,
+    WalletLink,
+    HashLink,
+    TxValue,
+    BuyOrSellAction,
+    TransactionTime,
     TokenNameAndSymbol,
     TokenChartLink,
     TokenPrice,
@@ -158,7 +148,6 @@ export default {
       descending: true,
       rowsPerPageItems: [10, 20, 50, 100],
     },
-    fieldHelpers,
   }),
   methods: {
     handlePageChange(page) {

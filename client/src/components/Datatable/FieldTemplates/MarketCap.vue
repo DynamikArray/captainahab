@@ -1,5 +1,7 @@
 <template>
-  <div class="text-subtitle-1">{{ formattedMarketCap }}</div>
+  <v-slide-x-reverse-transition mode="out-in">
+    <div :key="`transition_MarketCap_${item._id}`" class="text-subtitle-1">{{ formattedMarketCap }}</div>
+  </v-slide-x-reverse-transition>
 </template>
 
 <script>
