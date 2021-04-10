@@ -45,9 +45,11 @@
         <PeriodPriceData :item="item" dayPeriod="1d" />
       </template>
 
+      <!--
       <template v-slot:item.tokenPricesData.7d="{ item }">
         <PeriodPriceData :item="item" dayPeriod="7d" />
       </template>
+    -->
 
       <template v-slot:item.hash="{ item }">
         <HashLink :item="item" />

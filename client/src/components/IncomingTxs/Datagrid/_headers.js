@@ -51,22 +51,26 @@ export const rowHeaders = [
     sortable: true,
     align: "center",
   },
+  /*
   {
     text: "7d Price Action",
     value: "tokenPricesData.7d",
     sortable: true,
     align: "center",
   },
+  */
   {
     text: "TX",
     value: "hash",
     sortable: true,
     align: "center",
+    width: "70px",
   },
   {
     text: "Wallet",
     value: "from",
     sortable: true,
     align: "center",
+    width: "70px",
   },
 ];

@@ -1,6 +1,10 @@
 <template>
   <v-slide-x-reverse-transition mode="out-in">
-    <div :key="`transition_MarketCap_${item._id}`" class="text-subtitle-1">{{ formattedMarketCap }}</div>
+    <div :key="`transition_MarketCap_${item._id}`" class="text-subtitle-1">
+      <div class="d-flex no-wrap">
+        {{ formattedMarketCap }}
+      </div>
+    </div>
   </v-slide-x-reverse-transition>
 </template>
 

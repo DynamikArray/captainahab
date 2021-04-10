@@ -15,7 +15,7 @@
           <div class="d-flex align-center justify-start">
             <v-img
               class="ma-3 white darken-1"
-              style="border-radius: 15px"
+              style="border-radius: 15px; border: 1px solid #333; box-shadow: 1px 1px 2px #333"
               max-height="30"
               max-width="30"
               :src="item.tokenMetaData.logo"

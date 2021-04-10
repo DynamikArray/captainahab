@@ -42,30 +42,34 @@ export const rowHeaders = [
     text: "Market Cap",
     value: "tokenPricesData.market_cap",
     sortable: true,
-    align: "center",
+    align: "left",
   },
   {
     text: "1d Price Action",
     value: "tokenPricesData.1d",
     sortable: true,
-    align: "center",
+    align: "left",
   },
+  /*
   {
     text: "7d Price Action",
     value: "tokenPricesData.7d",
     sortable: true,
     align: "center",
   },
+  */
   {
     text: "TX",
     value: "hash",
     sortable: true,
     align: "center",
+    width: "70px",
   },
   {
     text: "Wallet",
     value: "from",
     sortable: true,
     align: "center",
+    width: "70px",
   },
 ];
