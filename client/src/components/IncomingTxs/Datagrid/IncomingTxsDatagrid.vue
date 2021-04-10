@@ -134,6 +134,7 @@ export default {
       }
     },
   },
+
   components: {
     WalletLink,
     HashLink,
@@ -147,6 +148,10 @@ export default {
     PeriodPriceData,
 
     ServerSideWithPageOptions,
+  },
+  created() {
+    if (this.items.length) this.pager.totalRecords = this.items.length;
+    if (this.items.length) this.pager.totalPages = Math.ceil(this.items.length / this.pager.limit);
   },
   data: () => ({
     rowHeaders,
