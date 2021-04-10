@@ -1,7 +1,17 @@
 const { logger } = require("../util/log");
 const { models } = require("../models/mongoose");
 
-module.exports = (socket, em) => {
+module.exports = async (socket, em) => {
+  try {
+    logger.debug("Getting most recent Tx's");
+    const txs = await models.Transactions.getMostRecentTxs(50);
+    socket.emit("newTxsAdded", { txs });
+  } catch (onSocketConnectionEmitNewTxsException) {
+    logger.error(
+      "onSocketConnectionEmitNewTxsException | error=" + JSON.stringify(onSocketConnectionEmitNewTxsException.message)
+    );
+  }
+
   em.on("IncomingTxs", async function ({ txIds }) {
     try {
       if (txIds.length == 0) {

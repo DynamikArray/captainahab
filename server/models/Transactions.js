@@ -141,4 +141,35 @@ Transactions.getTxsByIds = async function (txIds) {
   }
 };
 
+Transactions.getMostRecentTxs = async function (limit) {
+  try {
+    const txs = await Transactions.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "tokensmetadatas",
+          localField: "tokenMetaData.address",
+          foreignField: "address",
+          as: "tokenMetaData",
+        },
+      },
+      { $unwind: "$tokenMetaData" },
+      {
+        $lookup: {
+          from: "tokenspricedatas",
+          localField: "tokenMetaData.symbol",
+          foreignField: "symbol",
+          as: "tokenPricesData",
+        },
+      },
+      { $unwind: "$tokenPricesData" },
+    ]);
+    return txs;
+  } catch (getMostRecentTxsException) {
+    logger.error("getMostRecentTxsException | error=" + JSON.stringify(getMostRecentTxsException.message));
+    return [];
+  }
+};
+
 module.exports = Transactions;
