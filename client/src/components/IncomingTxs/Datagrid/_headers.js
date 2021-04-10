@@ -43,7 +43,7 @@ export const rowHeaders = [
     text: "Market Cap",
     value: "tokenPricesData.market_cap",
     sortable: true,
-    align: "center",
+    align: "left",
   },
   {
     text: "1d Price Action",
