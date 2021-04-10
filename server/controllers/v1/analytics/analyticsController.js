@@ -18,7 +18,7 @@ async function trending(req, res, next) {
       {
         $match: {
           timestamp: { $gte: hoursAgo },
-          "tokenMetaData.symbol": {
+          "tokenMetaData.address": {
             $exists: true,
             $ne: null,
           },
@@ -26,15 +26,15 @@ async function trending(req, res, next) {
       },
       {
         $group: {
-          _id: "$tokenMetaData.symbol",
-          symbolCount: {
+          _id: "$tokenMetaData.address",
+          txsCount: {
             $sum: 1,
           },
         },
       },
       {
         $sort: {
-          symbolCount: -1,
+          txsCount: -1,
         },
       },
       { $limit: 50 },
@@ -42,15 +42,16 @@ async function trending(req, res, next) {
         $lookup: {
           from: "tokensmetadatas",
           localField: "_id",
-          foreignField: "symbol",
+          foreignField: "address",
           as: "tokenMetaData",
         },
       },
       { $unwind: "$tokenMetaData" },
+
       {
         $lookup: {
           from: "tokenspricedatas",
-          localField: "_id",
+          localField: "tokenMetaData.symbol",
           foreignField: "symbol",
           as: "tokenPricesData",
         },

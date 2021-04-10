@@ -1,5 +1,5 @@
 <template>
-  <div class="home my-6">
+  <div class="trending my-6">
     <TrendingCoinsContainer />
   </div>
 </template>

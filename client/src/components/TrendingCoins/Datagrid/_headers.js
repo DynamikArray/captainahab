@@ -1,7 +1,7 @@
 export const rowHeaders = [
   {
     text: "Number of Tx's",
-    value: "symbolCount",
+    value: "txsCount",
     sortable: true,
     align: "center",
   },

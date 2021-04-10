@@ -12,8 +12,8 @@
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
       hide-default-footer
     >
-      <template v-slot:item.symbolCount="{ item }">
-        <h2 class="white--text">{{ item.symbolCount }}</h2>
+      <template v-slot:item.txsCount="{ item }">
+        <h2 class="white--text">{{ item.txsCount }}</h2>
       </template>
 
       <template v-slot:item.tokenMetaData="{ item }">
