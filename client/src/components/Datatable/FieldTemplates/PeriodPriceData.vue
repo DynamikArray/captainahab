@@ -2,7 +2,7 @@
   <v-slide-x-reverse-transition mode="out-in">
     <div :key="`transition_PeriodPriceData_${item._id}`" v-if="hasTokenMetaData" class="d-flex flex-grow-1">
       <div class="d-flex align-center justify-start caption flex-grow-1">
-        <div class="d-flex flex-column align-center justify-middle flex-grow-1 my-2">
+        <div class="d-flex flex-column align-center justify-start flex-grow-1 my-2">
           <div class="d-flex align-start justify-start subtitle-2 font-weight-light">Price Change</div>
           <div class="d-flex align-start justify-center flex-grow-1 flex-wrap">
             <div class="subtitle-1 mx-3 font-weight-bold flex-grow-1" :class="formatChangeColor(priceChange)">

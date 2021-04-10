@@ -4,7 +4,6 @@ export const rowHeaders = [
     value: "timestamp",
     sortable: true,
     align: "center",
-    width: "100px",
   },
   {
     text: "Action",

@@ -1,12 +1,12 @@
 <template>
   <v-slide-x-reverse-transition mode="out-in">
-    <h4
+    <h3
       :key="`transition_BuyOrSellAction_${item._id}`"
       class="textShadow"
       :class="fieldHelpers.buyOrSellColor(item.txAction)"
     >
       {{ item.txAction }}
-    </h4>
+    </h3>
   </v-slide-x-reverse-transition>
 </template>
 

@@ -2,7 +2,8 @@
   <v-slide-x-reverse-transition mode="out-in">
     <v-btn
       :key="`transition_TokenChartLink _${item._id}`"
-      color="orange darken-2 px-2"
+      color="grey darken-3 px-2"
+      elevation="4"
       :href="chartUrl"
       target="_blank"
       style="min-width: 20px"
