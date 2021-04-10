@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <AppBar />
+    <NavigationDrawer :drawer.sync="drawer" />
+    <AppBar @toggleDrawer="drawer = !drawer" />
     <v-main style="padding-top: 30px">
       <v-container fluid>
         <transition name="slide-fade" mode="out-in">
@@ -16,15 +17,19 @@
 import { TOTAL_TXS_GET_COUNT } from "@/store/actionTypes";
 
 import AppBar from "./components/_Layout/AppBar";
+import NavigationDrawer from "./components/_Layout/Navigation/NavigationDrawer";
 import Footer from "./components/_Layout/Footer";
 
 export default {
   name: "App",
-  components: { AppBar, Footer },
+  components: { AppBar, NavigationDrawer, Footer },
   created() {
     document.title = "Captain Ahab";
     this.$store.dispatch(`txs/${TOTAL_TXS_GET_COUNT}`, { root: true });
   },
+  data: () => ({
+    drawer: true,
+  }),
 };
 </script>
 

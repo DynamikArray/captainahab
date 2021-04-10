@@ -1,10 +1,10 @@
 <template>
-  <v-app-bar app color="primary" dark class="pa-0 ma-0" :maxHeight="50">
+  <v-app-bar app color="primary" dark class="pa-0 ma-0" :maxHeight="50" clipped-left>
     <div class="loadingIndicator">
       <v-progress-linear :indeterminate="Boolean(loading)" color="white" height="5"></v-progress-linear>
     </div>
 
-    <div class="d-flex align-center justify-space-between flex-grow-1 mt-1">
+    <div class="d-flex align-center justify-space-start flex-grow-1 mt-1">
       <div class="d-flex align-center justify-start mr-5">
         <div class="d-flex align-center justify-middle">
           <v-img src="@/assets/logo_large.png" max-width="60" />
@@ -17,19 +17,11 @@
         </div>
       </div>
 
-      <div class="d-flex align-center ml-3 mr-auto">
-        <div class="d-flex align-center mx-3">
-          <v-btn small text :to="{ name: 'Home' }">Home</v-btn>
-        </div>
-        <div class="d-flex align-center mx-3">
-          <v-btn small text :to="{ name: 'Trending' }">Trending</v-btn>
-        </div>
-        <div class="d-flex align-center mx-3">
-          <v-badge overlap color="green"> <v-btn small text :to="{ name: 'Incoming' }">Incoming</v-btn></v-badge>
-        </div>
+      <div class="d-flex align-center justify-middle">
+        <v-btn text @click="toggleDrawer"><v-icon class="mr-2">fa fa-bars</v-icon> Menu</v-btn>
       </div>
 
-      <div class="d-flex align-center">
+      <div class="d-flex align-center ml-auto">
         <!--SPACEHOLDER-->
       </div>
     </div>
@@ -41,10 +33,16 @@ import { mapState } from "vuex";
 
 export default {
   name: "ahab-AppBar",
+  props: {},
   computed: {
     ...mapState({
       loading: (state) => state.api.loading,
     }),
+  },
+  methods: {
+    toggleDrawer() {
+      this.$emit("toggleDrawer");
+    },
   },
 };
 </script>
