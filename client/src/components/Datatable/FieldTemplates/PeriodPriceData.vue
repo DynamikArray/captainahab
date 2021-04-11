@@ -1,15 +1,15 @@
 <template>
   <v-slide-x-reverse-transition mode="out-in">
     <div :key="`transition_PeriodPriceData_${item._id}`" v-if="hasTokenMetaData" class="d-flex flex-grow-1">
-      <div class="d-flex flex-column align-start justify-start flex-grow-1">
+      <div class="d-flex flex-column align-start justify-start flex-grow-1 my-1">
         <!--Left Column -->
         <div class="d-flex flex-wrap align-start justify-start flex-grow-1 my-0">
-          <div class="d-flex align-start justify-start caption font-weight-light grey--text">Price Change</div>
+          <div class="d-flex align-start justify-start caption font-weight-light grey--text tightLine">Price Change</div>
           <div class="d-flex align-start justify-start flex-grow-1 flex-wrap">
-            <div class="subtitle-1 mx-3 font-weight-bold flex-grow-1" :class="formatChangeColor(priceChange)">
+            <div class="subtitle-1 tightLine mx-3 font-weight-bold flex-grow-1" :class="formatChangeColor(priceChange)">
               {{ priceChange }}
             </div>
-            <div class="subtitle-1 mx-3 font-weight-bold flex-grow-1" :class="formatChangeColor(priceChangePct)">
+            <div class="subtitle-1 tightLine mx-3 font-weight-bold flex-grow-1" :class="formatChangeColor(priceChangePct)">
               % {{ priceChangePct }}
             </div>
           </div>
@@ -17,12 +17,12 @@
 
         <!--Right Column -->
         <div class="d-flex flex-wrap align-center justify-start flex-grow-1 my-0">
-          <div class="d-flex align-start justify-center caption font-weight-light grey--text">Vol. Change</div>
+          <div class="d-flex align-start justify-center caption font-weight-light grey--text tightLine">Vol. Change</div>
           <div class="d-flex align-start justify-start flex-grow-1 flex-wrap">
-            <div class="subtitle-1 mx-3 font-weight-bold" :class="formatChangeColor(volumeChange)">
+            <div class="subtitle-1 mx-3 font-weight-bold tightLine" :class="formatChangeColor(volumeChange)">
               {{ volumeChange | volume }}
             </div>
-            <div class="subtitle-1 mx-3 font-weight-bold" :class="formatChangeColor(volumeChangePct)">
+            <div class="subtitle-1 mx-3 font-weight-bold tightLine" :class="formatChangeColor(volumeChangePct)">
               % {{ volumeChangePct }}
             </div>
           </div>
@@ -88,4 +88,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.tightLine {
+  line-height: 1.5;
+}
+</style>

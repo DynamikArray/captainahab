@@ -9,9 +9,6 @@
           style="line-height: 1.2; font-size: 90%"
         />
       </div>
-      <div class="d-flex align-center justify-start grey--text" style="font-size: 80%">
-        {{ new Date(item.createdAt) | dateTime }}
-      </div>
     </div>
   </v-slide-x-reverse-transition>
 </template>
