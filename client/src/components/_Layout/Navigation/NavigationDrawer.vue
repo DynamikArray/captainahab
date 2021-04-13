@@ -1,10 +1,6 @@
 <template>
-  <v-navigation-drawer app absolute :mini-variant="drawer">
-    <div class="" style="margin-top: 60px">
-      <!-- HEADER SPACER -->
-    </div>
-
-    <div class="text-center">
+  <v-navigation-drawer app :mini-variant="drawer" clipped style="top: 50px; max-height: calc(100%)">
+    <div class="text-center mt-2">
       <h4 class="grey--text">Menu</h4>
       <v-divider class="mt-2" />
     </div>
