@@ -5,9 +5,14 @@ export const navigationLinks = [
     icon: "fa fa-home",
   },
   {
-    title: "Trending",
-    to: "Trending",
-    icon: "fab fa-hotjar",
+    title: "Trending Coins",
+    to: "TrendingCoins",
+    icon: "fa fa-coins",
+  },
+  {
+    title: "Trending Wallets",
+    to: "TrendingWallets",
+    icon: "fa fa-wallet",
   },
   {
     title: "Incoming",

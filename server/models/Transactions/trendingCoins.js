@@ -50,7 +50,7 @@ module.exports = (MODEL) => ({
         },
         { $unwind: "$tokenPricesData" },
       ]);
-      res.send(trending);
+      return trending;
     } catch (trendingCoinsModelException) {
       logger.error("trendingCoinsModelException | error=" + JSON.stringify(trendingCoinsModelException.message));
       return [];
