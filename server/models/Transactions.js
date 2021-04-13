@@ -52,55 +52,20 @@ transactionsSchema.plugin(aggregatePaginate);
 
 const Transactions = mongoose.model("Transactions", transactionsSchema);
 
-Transactions.searchTxList = async function (minEth, maxEth, symbol, page, limit) {
-  try {
-    /* Build Conditions */
-    const andCondition = [{ value: { $gte: Number(minEth) } }];
-    if (maxEth) andCondition.push({ value: { $lte: Number(maxEth) } });
-    if (symbol) andCondition.push({ "tokenMetaData.symbol": { $regex: symbol } });
+//Now import our queries passing the Model along
+const { trendingCoins } = require("./Transactions/trendingCoins.js")(Transactions);
+const { trendingWallets } = require("./Transactions/trendingWallets.js")(Transactions);
+const { searchTxList } = require("./Transactions/searchTxList.js")(Transactions);
 
-    /* Join All Conditions */
-    const matchCriteria = {
-      $and: andCondition,
-    };
+Transactions.trendingCoins = trendingCoins;
+Transactions.trendingWallets = trendingWallets;
+Transactions.searchTxList = searchTxList;
 
-    /* Query Conditions for recordset page of ids to lookup and unwind in next steps */
-    const txs = await Transactions.aggregatePaginate(
-      Transactions.aggregate([
-        {
-          $match: matchCriteria,
-        },
-        { $sort: { createdAt: -1 } },
-        { $limit: 5000 },
-        {
-          $lookup: {
-            from: "tokensmetadatas",
-            localField: "tokenMetaData.address",
-            foreignField: "address",
-            as: "tokenMetaData",
-          },
-        },
-        { $unwind: "$tokenMetaData" },
-        {
-          $lookup: {
-            from: "tokenspricedatas",
-            localField: "tokenMetaData.symbol",
-            foreignField: "symbol",
-            as: "tokenPricesData",
-          },
-        },
-        { $unwind: "$tokenPricesData" },
-      ]),
-      { sort: { _id: -1 }, page, limit }
-    );
-
-    return txs;
-  } catch (e) {
-    logger.error("searchTxList | error=" + e.message);
-    return [];
-  }
-};
-
+/**
+ * [description]
+ * @param  {[type]} txIds [description]
+ * @return {[type]}       [description]
+ */
 Transactions.getTxsByIds = async function (txIds) {
   if (!txIds) {
     logger.error("getTxsByIds | error=No TxIds | txIds=" + JSON.stringify(txIds));
@@ -141,6 +106,11 @@ Transactions.getTxsByIds = async function (txIds) {
   }
 };
 
+/**
+ * [description]
+ * @param  {[type]} limit [description]
+ * @return {[type]}       [description]
+ */
 Transactions.getMostRecentTxs = async function (limit) {
   try {
     const txs = await Transactions.aggregate([

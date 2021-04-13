@@ -4,65 +4,29 @@ const cheerio = require("cheerio");
 const { web3 } = require("../../../util/alchemy");
 const { logger } = require("../../../util/log");
 
-const { sub } = require("date-fns");
-
 const Transactions = require("../../../models/Transactions");
 const tokenPricesHelper = require("../../../helpers/tokenPricesHelper");
 
 //
-async function trending(req, res, next) {
+async function trendingCoins(req, res, next) {
   try {
-    const hoursAgo = (sub(Date.now(), { hours: 24 }).getTime() / 1000).toFixed(0);
-
-    let trendingCoins = await Transactions.aggregate([
-      {
-        $match: {
-          timestamp: { $gte: hoursAgo },
-          "tokenMetaData.address": {
-            $exists: true,
-            $ne: null,
-          },
-        },
-      },
-      {
-        $group: {
-          _id: "$tokenMetaData.address",
-          txsCount: {
-            $sum: 1,
-          },
-        },
-      },
-      {
-        $sort: {
-          txsCount: -1,
-        },
-      },
-      { $limit: 50 },
-      {
-        $lookup: {
-          from: "tokensmetadatas",
-          localField: "_id",
-          foreignField: "address",
-          as: "tokenMetaData",
-        },
-      },
-      { $unwind: "$tokenMetaData" },
-
-      {
-        $lookup: {
-          from: "tokenspricedatas",
-          localField: "tokenMetaData.symbol",
-          foreignField: "symbol",
-          as: "tokenPricesData",
-        },
-      },
-      { $unwind: "$tokenPricesData" },
-    ]);
+    const trendingCoins = await Transactions.trendingCoins();
     res.send(trendingCoins);
-  } catch (trendingException) {
-    logger.error("trendingException | error=" + trendingException.message);
+  } catch (trendingCoinsException) {
+    logger.error("trendingCoinsException | error=" + trendingCoinsException.message);
     next();
   }
 }
 
-module.exports = { trending };
+//
+async function trendingWallets(req, res, next) {
+  try {
+    const trendingWallets = await Transactions.trendingWallets();
+    res.send(trendingWallets);
+  } catch (trendingWalletsException) {
+    logger.error("trendingWalletsException | error=" + trendingWalletsException.message);
+    next();
+  }
+}
+
+module.exports = { trendingCoins, trendingWallets };
