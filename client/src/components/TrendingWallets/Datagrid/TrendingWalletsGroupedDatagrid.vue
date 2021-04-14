@@ -2,12 +2,13 @@
   <div class="d-flex flex-grow-1 align-center">
     <v-data-table
       ref="dataTable"
-      :items-per-page="50"
       :headers="rowHeaders"
       :loading="loading"
       :items="orderedItems"
       :group-by="['rowOrder']"
       :group-desc="['desc']"
+      :page="pager.page"
+      :items-per-page="pager.itemsPerPage"
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
       hide-default-footer
     >
@@ -52,7 +53,7 @@
       </template>
 
       <template v-slot:group.header="{ group, items }">
-        <td colspan="10">
+        <td colspan="11">
           <div class="d-flex flex-grow-1 align-center justify-start pa-1">
             <div class="d-flex align-center justify-center ml-0 mr-5">
               <h1 class="textShadow">{{ items[0].txsCount }}<span class="subtitle-2 ml-1">Tx's</span></h1>
@@ -71,13 +72,26 @@
         </td>
       </template>
 
-      <template v-slot:top="{ pagination, options, updateOptions }">
+      <template v-slot:top="{ pagination, options }">
         <v-data-footer
           next-icon="fa fa-chevron-circle-right"
           prev-icon="fa fa-chevron-circle-left"
           :pagination="pagination"
           :options="options"
           @update:options="updateOptions"
+          :items-per-page-options="itemsPerPageOptions"
+          items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+        />
+      </template>
+
+      <template v-slot:footer="{ props }">
+        <v-data-footer
+          next-icon="fa fa-chevron-circle-right"
+          prev-icon="fa fa-chevron-circle-left"
+          :pagination="props.pagination"
+          :options="props.options"
+          @update:options="updateOptions"
+          :items-per-page-options="itemsPerPageOptions"
           items-per-page-text="$vuetify.dataTable.itemsPerPageText"
         />
       </template>
@@ -99,8 +113,6 @@ import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
 import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
 import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
 import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
-
-//import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 
 export default {
   name: "TrendingWalletsGroupedDatagrid",
@@ -130,15 +142,23 @@ export default {
   data: () => ({
     rowHeaders,
     fieldHelpers,
+    itemsPerPageOptions: [10, 25, 50, 100],
+    pager: {
+      page: 1,
+      itemsPerPage: 50,
+    },
   }),
   computed: {
     orderedItems() {
       return [...this.items].sort((a, b) => b.txsCount - a.txsCount);
-
-      //return this.items;
     },
   },
   methods: {
+    updateOptions(val) {
+      Object.keys(this.pager).forEach((key) => {
+        if (val[key]) this.pager[key] = val[key];
+      });
+    },
     handlePageChange(page) {
       console.log("handle page change", page);
     },
@@ -146,4 +166,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+.v-data-footer__select {
+  padding: 5px;
+}
+.v-data-footer__select .v-select {
+  margin: 0px 0px 0px 20px !important;
+}
+</style>
