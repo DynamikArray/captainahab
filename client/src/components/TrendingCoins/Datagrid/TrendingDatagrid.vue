@@ -3,7 +3,6 @@
     <v-data-table
       ref="dataTable"
       :items-per-page="50"
-      class="d-flex flex-grow-1"
       :headers="rowHeaders"
       :loading="loading"
       :items="items"

@@ -25,12 +25,11 @@ module.exports = (MODEL) => ({
             txsCount: -1,
           },
         },
-        { $limit: 25 },
-
+        { $limit: 30 },
         {
           $lookup: {
             from: "transactions",
-            as: "txs",
+            as: "tx",
             let: { indicator_id: "$_id" },
             pipeline: [
               {
@@ -38,14 +37,43 @@ module.exports = (MODEL) => ({
                   $expr: { $eq: ["$from", "$$indicator_id"] },
                 },
               },
-              { $sort: { value: -1, createdAt: -1 } }, // add sort if needed (for example, if you want first 100 comments by creation date)
+              { $sort: { _id: -1 } },
               { $limit: 10 },
             ],
           },
         },
-        { $unwind: "$txs" },
+        { $unwind: { path: "$tx", preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: "tokenspricedatas",
+            localField: "tx.tokenMetaData.symbol",
+            foreignField: "symbol",
+            as: "tx.tokenPricesData",
+          },
+        },
+        { $unwind: { path: "$tx.tokenPricesData", preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: "tokensmetadatas",
+            localField: "tx.tokenMetaData.address",
+            foreignField: "address",
+            as: "tx.tokenMetaData",
+          },
+        },
+        { $unwind: { path: "$tx.tokenMetaData", preserveNullAndEmptyArrays: true } },
       ]);
-      return trendingWallets;
+
+      let formatted = trendingWallets.reduce((acc, item) => {
+        const numbers = item._id.replace(/[^0-9.]/g, "");
+        item.rowOrder = `${item.txsCount}${numbers.substr(0, 5)}`;
+        acc.push(item);
+        return acc;
+      }, []);
+
+      return formatted;
+      //return trendingWallets;
     } catch (trendingWalletsModelException) {
       logger.error("trendingWalletsModelException | error=" + JSON.stringify(trendingWalletsModelException.message));
       return [];

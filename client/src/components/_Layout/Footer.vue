@@ -1,5 +1,5 @@
 <template>
-  <v-footer app class="secondary darken-2 subtitle-2 font-weight-light white--text">
+  <v-footer app class="secondary darken-2 subtitle-2 font-weight-light white--text" inset>
     <div class="d-flex align-start justify-space-between flex-grow-1">
       <div class="d-flex flex-grow-1 align-center justify-start">
         <div class="d-flex align-center mx-2 mt-1">
