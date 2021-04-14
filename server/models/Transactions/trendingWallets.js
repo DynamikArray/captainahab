@@ -25,8 +25,7 @@ module.exports = (MODEL) => ({
             txsCount: -1,
           },
         },
-        { $limit: 10 },
-
+        { $limit: 30 },
         {
           $lookup: {
             from: "transactions",
@@ -38,21 +37,12 @@ module.exports = (MODEL) => ({
                   $expr: { $eq: ["$from", "$$indicator_id"] },
                 },
               },
-              { $sort: { value: -1, createdAt: -1 } }, // add sort if needed (for example, if you want first 100 comments by creation date)
-              { $limit: 5 },
+              { $sort: { _id: -1 } },
+              { $limit: 10 },
             ],
           },
         },
-        { $unwind: "$tx" },
-        {
-          $lookup: {
-            from: "tokensmetadatas",
-            localField: "tx.tokenMetaData.address",
-            foreignField: "address",
-            as: "tx.tokenMetaData",
-          },
-        },
-        { $unwind: "$tx.tokenMetaData" },
+        { $unwind: { path: "$tx", preserveNullAndEmptyArrays: true } },
 
         {
           $lookup: {
@@ -62,14 +52,28 @@ module.exports = (MODEL) => ({
             as: "tx.tokenPricesData",
           },
         },
-        { $unwind: "$tx.tokenPricesData" },
+        { $unwind: { path: "$tx.tokenPricesData", preserveNullAndEmptyArrays: true } },
+
         {
-          $sort: {
-            txsCount: -1,
+          $lookup: {
+            from: "tokensmetadatas",
+            localField: "tx.tokenMetaData.address",
+            foreignField: "address",
+            as: "tx.tokenMetaData",
           },
         },
+        { $unwind: { path: "$tx.tokenMetaData", preserveNullAndEmptyArrays: true } },
       ]);
-      return trendingWallets;
+
+      let formatted = trendingWallets.reduce((acc, item) => {
+        const numbers = item._id.replace(/[^0-9.]/g, "");
+        item.rowOrder = `${item.txsCount}${numbers.substr(0, 5)}`;
+        acc.push(item);
+        return acc;
+      }, []);
+
+      return formatted;
+      //return trendingWallets;
     } catch (trendingWalletsModelException) {
       logger.error("trendingWalletsModelException | error=" + JSON.stringify(trendingWalletsModelException.message));
       return [];

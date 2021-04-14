@@ -19,8 +19,8 @@ module.exports = (MODEL) => ({
           {
             $match: matchCriteria,
           },
-          { $sort: { createdAt: -1 } },
-          { $limit: 2500 },
+          { $sort: { _id: -1 } },
+          { $limit: 5000 },
           {
             $lookup: {
               from: "tokensmetadatas",
@@ -40,7 +40,7 @@ module.exports = (MODEL) => ({
           },
           { $unwind: "$tokenPricesData" },
         ]),
-        { sort: { createdAt: -1 }, page, limit }
+        { sort: { _id: -1 }, page, limit }
       );
 
       return txs;

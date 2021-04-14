@@ -5,11 +5,10 @@
       :items-per-page="50"
       :headers="rowHeaders"
       :loading="loading"
-      :items="items"
-      sortBy="timestamp"
-      :sortDesc="true"
+      :items="orderedItems"
+      :group-by="['rowOrder']"
+      :group-desc="['desc']"
       :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
-      group-by="tx.from"
       hide-default-footer
     >
       <template v-slot:item.tx.timestamp="{ item }">
@@ -53,21 +52,34 @@
       </template>
 
       <template v-slot:group.header="{ group, items }">
-        <td colspan="9">
+        <td colspan="10">
           <div class="d-flex flex-grow-1 align-center justify-start pa-1">
-            <div class="d-flex align-center justify-center">
-              <WalletLink :item="items[0].tx" />
-            </div>
-
-            <div class="d-flex align-center justify-center ml-10 mr-5">
-              <h2>{{ items[0].txsCount }} <span class="subtitle-2">tx's</span></h2>
+            <div class="d-flex align-center justify-center ml-0 mr-5">
+              <h1 class="textShadow">{{ items[0].txsCount }}<span class="subtitle-2 ml-1">Tx's</span></h1>
             </div>
 
             <div class="d-flex align-center justify-center mx-3">
-              <h4>{{ items[0].tx.from }}</h4>
+              <h2 class="textShadow mt-1">
+                <span class="subtitle-2 mr-1">Wallet:</span>{{ fieldHelpers.truncateTextValue(items[0].tx.from, 4) }}
+              </h2>
+            </div>
+
+            <div class="d-flex align-center justify-center">
+              <WalletLink :item="items[0].tx" />
             </div>
           </div>
         </td>
+      </template>
+
+      <template v-slot:top="{ pagination, options, updateOptions }">
+        <v-data-footer
+          next-icon="fa fa-chevron-circle-right"
+          prev-icon="fa fa-chevron-circle-left"
+          :pagination="pagination"
+          :options="options"
+          @update:options="updateOptions"
+          items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+        />
       </template>
     </v-data-table>
   </div>
@@ -75,6 +87,7 @@
 
 <script>
 import { rowHeaders } from "./_headers";
+import fieldHelpers from "@/components/Datatable/fieldHelpers";
 
 import WalletLink from "@/components/Datatable/FieldTemplates/WalletLink";
 import HashLink from "@/components/Datatable/FieldTemplates/HashLink";
@@ -86,6 +99,8 @@ import MarketCap from "@/components/Datatable/FieldTemplates/MarketCap";
 import TokenNameAndSymbol from "@/components/Datatable/FieldTemplates/TokenNameAndSymbol";
 import TokenPrice from "@/components/Datatable/FieldTemplates/TokenPrice";
 import PeriodPriceData from "@/components/Datatable/FieldTemplates/PeriodPriceData";
+
+//import ServerSidePager from "@/components/Datatable/Pager/ServerSidePager";
 
 export default {
   name: "TrendingWalletsGroupedDatagrid",
@@ -110,10 +125,24 @@ export default {
     TokenPrice,
     MarketCap,
     PeriodPriceData,
+    //  ServerSidePager,
   },
   data: () => ({
     rowHeaders,
+    fieldHelpers,
   }),
+  computed: {
+    orderedItems() {
+      return [...this.items].sort((a, b) => b.txsCount - a.txsCount);
+
+      //return this.items;
+    },
+  },
+  methods: {
+    handlePageChange(page) {
+      console.log("handle page change", page);
+    },
+  },
 };
 </script>
 
